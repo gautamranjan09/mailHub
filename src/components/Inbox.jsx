@@ -39,24 +39,24 @@ const Inbox = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-            <p className="text-sm text-gray-500">1-50 of 1000</p>
-            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
-            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
-          </div>
+          <p className="text-sm text-gray-500">1-50 of 1000</p>
+          <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowLeft size={'24px'} /></button>
+          <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowRight size={'24px'} /></button>
+        </div>
       </div>
       <div className="h-[75vh] overflow-y-auto">
         <div className="flex items-center gap-1">
           {mailType.map((item, index) => (
             <button
-              className={`${mailTypeSelected === item.text ? 'border-b-4 border-b-blue-600 text-blue-600':''} flex items-center gap-5 p-4 w-52 hover:bg-gray-100 transition-all duration-100 ease-in-out`}
+              className={`${mailTypeSelected === item.text ? 'border-b-4 border-b-blue-600 text-blue-600' : ''} flex items-center gap-5 p-4 w-52 hover:bg-gray-100 transition-all duration-100 ease-in-out`}
               key={item.text}
-              onClick={()=>setMailTypeSelected(item.text)}
+              onClick={() => setMailTypeSelected(item.text)}
             >
               {item.icon} <span>{item.text}</span>
             </button>
           ))}
         </div>
-        <Messages/>
+        <Messages />
       </div>
     </div>
   );
