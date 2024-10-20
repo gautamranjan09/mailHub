@@ -35,7 +35,7 @@ const sidebarItems = [
 const Sidebar = () => {
   return (
     <div className="w-[15%]">
-      <div className="p-3">
+      <div className="p-3 pt-1">
         <button className="flex items-center gap-2 p-4 rounded-2xl hover:shadow-md bg-[#C2E7ff] transition-all duration-200 ease-in-out active:scale-95">
           <LuPencil size={"20px"} /> Compose
         </button>
