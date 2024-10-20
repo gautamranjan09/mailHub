@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import DropdownMenu from "./DropdownMenu";
 import { IoMdMore, IoMdRefresh } from "react-icons/io";
-import { MdInbox } from "react-icons/md";
+import { MdInbox, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { GoTag } from "react-icons/go";
 import { FaUserFriends } from "react-icons/fa";
+import Messages from "./Messages";
 
 const mailType = [
   {
@@ -37,6 +38,11 @@ const Inbox = () => {
             <IoMdMore size={"20px"} />
           </div>
         </div>
+        <div className="flex items-center gap-2">
+            <p className="text-sm text-gray-500">1-50 of 1000</p>
+            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
+            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
+          </div>
       </div>
       <div className="h-[75vh] overflow-y-auto">
         <div className="flex items-center gap-1">
@@ -50,6 +56,7 @@ const Inbox = () => {
             </button>
           ))}
         </div>
+        <Messages/>
       </div>
     </div>
   );
