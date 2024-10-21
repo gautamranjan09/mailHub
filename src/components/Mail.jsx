@@ -47,7 +47,7 @@ const Mail = () => {
             <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
         </div>
       </div>
-      <div className="h-[75vh] overflow-y-auto p-4">
+      <div className="h-[78vh] overflow-y-auto p-4">
         <div className="flex items-center justify-between bg-white gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-medium">Subject</h1>

@@ -8,9 +8,38 @@
 }
 
 .ql-container {
-  @apply min-h-[300px];
+  @apply min-h-[220px];
 }
 
 .ql-editor {
   @apply text-gray-800 p-2;
+}
+/* Custom styles for Quill editor */
+.custom-quill-toolbar .ql-toolbar {
+  @apply p-1; /* Reduce padding */
+  @apply text-sm; /* Make text smaller */
+}
+
+.custom-quill-toolbar .ql-toolbar .ql-formats {
+  @apply m-0 p-0; /* Remove margin and padding */
+}
+
+.custom-quill-toolbar .ql-container.ql-snow {
+  @apply text-sm; /* Reduce text size inside the editor */
+}
+
+.custom-quill-toolbar .ql-toolbar button {
+  @apply h-5 w-5; /* Reduce button height and width */
+}
+/* Custom styles for Quill editor */
+.custom-quill-editor .ql-container {
+  @apply border-none; /* Remove the border around the editor */
+}
+
+.custom-quill-editor .ql-toolbar {
+  @apply border-b-slate-300 border-t-0 border-r-0 border-l-0; /* Remove the border around the toolbar */
+}
+
+.custom-quill-editor .ql-editor {
+  @apply focus:outline-none; /* Remove focus outline when editing */
 }

@@ -8,8 +8,6 @@ const Body = () => {
   return (
     <div className="flex">
       <Sidebar />
-      
-      <SendMail/>
       <Outlet />
     </div>
   );

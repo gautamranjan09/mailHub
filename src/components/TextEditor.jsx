@@ -15,13 +15,15 @@ const TextEditor = ({ value, onChange }) => {
         }
 
   return (
-    <ReactQuill
-      value={value}
-      onChange={onChange}
-      modules={modules}
-      placeholder="Compose your message here..."
-      theme="snow"
-    />
+    <div className="custom-quill-toolbar custom-quill-editor">
+      <ReactQuill
+        value={value}
+        onChange={onChange}
+        modules={modules}
+        placeholder="Compose your message here..."
+        theme="snow"
+      />
+    </div>
   );
 };
 

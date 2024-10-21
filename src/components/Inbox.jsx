@@ -44,7 +44,7 @@ const Inbox = () => {
           <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowRight size={'24px'} /></button>
         </div>
       </div>
-      <div className="h-[75vh] overflow-y-auto">
+      <div className="h-[78vh] overflow-y-auto">
         <div className="flex items-center gap-1">
           {mailType.map((item, index) => (
             <button
