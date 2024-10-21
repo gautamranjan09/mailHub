@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import TextEditor from "./TextEditor";
 import { useDispatch } from "react-redux";
 import { setOpen } from "../redux/appSlice";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
 
 const ComposeMail = () => {
   const [to, setTo] = useState("");
@@ -9,11 +11,18 @@ const ComposeMail = () => {
   const [editorContent, setEditorContent] = useState("");
   const dispatch = useDispatch();
 
-  function handleFormSubmit(e){
+  async function handleFormSubmit(e){
     e.preventDefault();
     console.log(to, subject, stripHtml(editorContent));
-    dispatch(setOpen(false));
 
+    await addDoc(collection(db, "emails"),{
+      to: to,
+      subject: subject,
+      message: stripHtml(editorContent),
+      createdAt: serverTimestamp(),
+    })
+
+    dispatch(setOpen(false));
     setTo("");
     setSubject("");
     setEditorContent("");
