@@ -36,15 +36,15 @@ const Mail = () => {
             <div
               key={index}
               onClick={item.function}
-              className="p-2 rounded-full hover:bg-gray-100 cursor-pointer transition-all duration-200 ease-in-out"
+              className="p-2 rounded-full hover:bg-gray-100 cursor-pointer transition-all duration-1000 ease-in-out"
             >
               {item.icon}
             </div>
           ))}
         </div>
         <div className="flex items-center gap-2">
-            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
-            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-200 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
+            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
+            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
         </div>
       </div>
       <div className="h-[75vh] overflow-y-auto p-4">

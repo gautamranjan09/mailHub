@@ -43,10 +43,10 @@ const DropdownMenu = () => {
       <div
         className={`flex rounded-md ${
           isActive ? "bg-gray-300" : ""
-        } transition-colors duration-200 cursor-pointer`}
+        } transition-colors duration-1000 cursor-pointer`}
       >
         <div className="flex items-center">
-          <button onClick={handleCheckboxClick} className="px-1 rounded-sm border-none bg-transparent cursor-pointer py-1 hover:bg-gray-200 transition-all duration-200 ease-in-out">
+          <button onClick={handleCheckboxClick} className="px-1 rounded-sm border-none bg-transparent cursor-pointer py-1 hover:bg-gray-200 transition-all duration-1000 ease-in-out">
             {/* <input
               type="checkbox"
               onClick={() => setIsActive((prevIsActive) => !prevIsActive)}
@@ -56,7 +56,7 @@ const DropdownMenu = () => {
           </button>
           <button
             onClick={toggleDropdown}
-            className="rounded-sm border-none bg-transparent cursor-pointer py-2 hover:bg-gray-200 transition-all duration-200 ease-in-out"
+            className="rounded-sm border-none bg-transparent cursor-pointer py-2 hover:bg-gray-200 transition-all duration-1000 ease-in-out"
           >
             <FaCaretDown />
           </button>
@@ -71,7 +71,7 @@ const DropdownMenu = () => {
                 <button
                   key={option}
                   onClick={() => handleOptionClick(option)}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-all duration-1000 ease-in-out"
                 >
                   {option}
                 </button>

@@ -1,8 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
+/* Tailwind custom styles for Quill */
+.ql-toolbar {
+  @apply border-b border-gray-300;
 }
 
+.ql-container {
+  @apply min-h-[300px];
+}
+
+.ql-editor {
+  @apply text-gray-800 p-2;
+}
