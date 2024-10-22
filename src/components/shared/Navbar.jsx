@@ -5,16 +5,78 @@ import { IoIosSearch } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { TbGridDots } from "react-icons/tb";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearchText } from "../../redux/appSlice";
 
 const Navbar = () => {
+  const { emails } = useSelector((state) => state.appSlice);
   const [input, setInput] = useState("");
-  const dispatch =  useDispatch();
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
-  useEffect(()=>{
-    dispatch(setSearchText(input));
-  },[input])
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (input && showSuggestions) {
+        // Only show suggestions if showSuggestions is true
+        const filteredSuggestions = emails
+          ?.filter((email) => {
+            const lowerCaseInput = input.toLowerCase();
+            return (
+              email?.subject?.toLowerCase().includes(lowerCaseInput) ||
+              email?.to?.toLowerCase().includes(lowerCaseInput) ||
+              email?.message?.toLowerCase().includes(lowerCaseInput)
+            );
+          })
+          .map((email) => ({
+            id: email.id,
+            subject: email.subject,
+            to: email.to,
+            message: email.message,
+            createdAt: email.createdAt,
+          }));
+
+        setSuggestions(filteredSuggestions.slice(0, 5));
+      } else {
+        setSuggestions([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [input, emails, showSuggestions]); // Added showSuggestions to dependencies
+
+  const handleSuggestionClick = (suggestion) => {
+    dispatch(setSearchText(suggestion.subject));
+    setInput(suggestion.subject);
+    setShowSuggestions(false); // Hide suggestions after clicking
+    setSuggestions([]);
+  };
+
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+    setInput(newValue);
+    setShowSuggestions(true); // Show suggestions when typing
+    if (newValue === "") {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      dispatch(setSearchText(""));
+    }
+  };
+
+  // Handle clicking outside of suggestions to close them
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".search-container")) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex items-center justify-between mx-3 h-16">
@@ -33,19 +95,52 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className="md:block hidden w-[50%]">
-        <div className="flex items-center bg-[#dae8fd] px-1 py-1 rounded-full focus-within:bg-white">
-          <div className="flex items-center w-9 h-9 justify-center rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-200 ease-in-out">
-            <IoIosSearch className="text-gray-700" size={"22px"} />
+      <div className="md:block hidden w-[50%] relative search-container">
+        <div className="flex justify-center items-center w-full">
+          <div className="flex items-center bg-[#dae8fd] px-1 py-1 rounded-full focus-within:bg-white focus-within:shadow-lg transition-all duration-300 ease-in-out w-[60%] focus-within:w-[100%]">
+            <div className="flex items-center w-9 h-9 justify-center rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-300 ease-in-out">
+              <IoIosSearch className="text-gray-700" size={"22px"} />
+            </div>
+            <input
+              type="search"
+              value={input}
+              onChange={handleInputChange}
+              onFocus={() => setShowSuggestions(true)} // Show suggestions when input is focused
+              placeholder="Search Mail"
+              className="rounded-full w-full bg-transparent outline-none px-1 placeholder:text-gray-500"
+            />
           </div>
-          <input
-            type="search"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Search Mail"
-            className="rounded-full w-full bg-transparent outline-none px-1 placeholder:text-gray-500"
-          />
         </div>
+
+        {showSuggestions && suggestions.length > 0 && (
+          <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg w-full mt-1 shadow-lg max-h-60 overflow-y-auto">
+            {suggestions.map((suggestion) => (
+              <li
+                key={suggestion.id}
+                className="flex flex-col px-4 py-3 hover:bg-blue-100 transition-colors duration-200 cursor-pointer"
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <span className="text-gray-800 font-semibold">
+                      {suggestion.subject}
+                    </span>
+                    <span className="text-gray-500 text-sm">
+                      {" "}
+                      (To: {suggestion.to})
+                    </span>
+                  </div>
+                  <div className="text-gray-400 text-xs">
+                    {suggestion.createdAt}
+                  </div>
+                </div>
+                <div className="text-gray-600 text-sm mt-1">
+                  {suggestion.message.substring(0, 30)}...
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className="md:block hidden">
         <div className="flex items-center gap-2">
