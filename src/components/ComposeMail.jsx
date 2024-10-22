@@ -14,6 +14,7 @@ const ComposeMail = () => {
   async function handleFormSubmit(e){
     e.preventDefault();
     console.log(to, subject, stripHtml(editorContent));
+    dispatch(setOpen(false));
 
     await addDoc(collection(db, "emails"),{
       to: to,
@@ -22,7 +23,6 @@ const ComposeMail = () => {
       createdAt: serverTimestamp(),
     })
 
-    dispatch(setOpen(false));
     setTo("");
     setSubject("");
     setEditorContent("");

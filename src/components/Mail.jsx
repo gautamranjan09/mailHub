@@ -1,3 +1,4 @@
+import { deleteDoc, doc } from "firebase/firestore";
 import React from "react";
 import { BiArchiveIn } from "react-icons/bi";
 import { IoMdArrowBack, IoMdMore } from "react-icons/io";
@@ -11,22 +12,44 @@ import {
   MdOutlineReport,
   MdOutlineWatchLater,
 } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { db } from "../firebase";
 
 const Mail = () => {
   const navigate = useNavigate();
+  const{ id } = useParams();
+  const { emails } = useSelector((state) => state.appSlice);
+
+  // Find the product based on the productId
+  const selectedEmail = emails.find((email) => email.id === id);
+
+  const deteteMailById = async (id) => {
+    try {
+      await deleteDoc(doc(db, "emails" , id));
+      //navigate("/inbox");
+    } catch (error) {
+      console.log(error);
+    }
+  }
  
   const iconsButton = [
     { icon: <IoMdArrowBack size={"20px"} />, function:()=>navigate('/inbox')},
     { icon: <BiArchiveIn size={"20px"} /> },
     { icon: <MdOutlineReport size={"20px"} /> },
-    { icon: <MdDeleteOutline size={"20px"} /> },
+    { icon: <MdDeleteOutline size={"20px"} />, function: ()=> deteteMailById(id) },
     { icon: <MdOutlineMarkEmailUnread size={"20px"} /> },
     { icon: <MdOutlineWatchLater size={"20px"} /> },
     { icon: <MdOutlineAddTask size={"20px"} /> },
     { icon: <MdOutlineDriveFileMove size={"20px"} /> },
     { icon: <IoMdMore size={"20px"} /> },
   ];
+
+  if (!selectedEmail) {
+    // If the selected email does not exist, navigate to inbox
+    navigate("/inbox");
+    return null; // Prevent rendering the rest of the component
+  }
  
   return (
     <div className="flex-1 bg-white rounded-2xl mx-5">
@@ -50,19 +73,19 @@ const Mail = () => {
       <div className="h-[78vh] overflow-y-auto p-4">
         <div className="flex items-center justify-between bg-white gap-1">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-medium">Subject</h1>
+            <h1 className="text-xl font-medium">{selectedEmail?.subject}</h1>
             <span className="text-sm bg-gray-200 rounded-md px-2">inbox</span>
           </div>
           <div className="flex-none text-gray-400 my-5 text-sm">
-            <p>12-08-2024</p>
+            <p>{selectedEmail?.createdAt}</p>
           </div>
         </div>
         <div className="text-gray-500 text-sm">
-          <h1>gautam@gmail.com</h1>
+          <h1>{selectedEmail?.to}</h1>
           <span>to me</span>
         </div>
         <div className="my-10">
-          <p>Message</p>
+          <p>{selectedEmail?.message}</p>
         </div>
       </div>
     </div>

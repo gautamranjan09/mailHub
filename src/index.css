@@ -43,3 +43,56 @@
 .custom-quill-editor .ql-editor {
   @apply focus:outline-none; /* Remove focus outline when editing */
 }
+
+/* Custom NProgress styles */
+#nprogress {
+  pointer-events: none; /* Prevent interactions while loading */
+}
+
+#nprogress .bar {
+  background: #cf1d26; /* Change this to your desired color */
+  position: fixed;
+  z-index: 1031; /* Adjust if necessary */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  height: 3px; /* Height of the progress bar */
+}
+
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0; /* Start peg from the right */
+  width: 100px; /* Width of the peg */
+  height: 100%; /* Full height */
+  box-shadow: 0 0 10px #cf1d26, 0 0 5px #cf1d26; /* Color for peg shadow */
+  opacity: 1; /* Opacity of the peg */
+  transform: translate3d(0, 0, 0); /* Smooth transition */
+}
+
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031; /* Ensure the spinner is above other content */
+  top: 15px; /* Position it */
+  right: 15px; /* Position it */
+}
+
+#nprogress .spinner-icon {
+  width: 48px; /* Adjust width */
+  height: 48px; /* Adjust height */
+  border: solid 2px transparent; /* Border for the spinner */
+  border-top-color: #cf1d26; /* Change spinner color */
+  border-left-color: #cf1d26; /* Change spinner color */
+  border-radius: 50%; /* Make it round */
+  animation: nprogress-spinner 400ms linear infinite; /* Animation */
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg); /* Initial state */
+  }
+  100% {
+    transform: rotate(360deg); /* End state */
+  }
+}
