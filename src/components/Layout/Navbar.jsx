@@ -6,16 +6,13 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { TbGridDots } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchText } from "../../redux/appSlice";
+import { setSearchText, setShowSidebar } from "../../redux/appSlice";
 
 const Navbar = () => {
-  const { emails } = useSelector((state) => state.appSlice);
+  const { emails, showSidebar } = useSelector((state) => state.appSlice);
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  console.log("Navbar");
-  
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -95,7 +92,7 @@ const Navbar = () => {
     <div className="flex items-center justify-between mx-3 h-16">
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-6">
-          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div onClick={()=> dispatch(setShowSidebar())} className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <RxHamburgerMenu size={"20px"} />
           </div>
           <div className="flex items-center gap-2 cursor-pointer">

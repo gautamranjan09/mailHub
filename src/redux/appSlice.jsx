@@ -6,6 +6,8 @@ const appSlice = createSlice({
     open: false,
     emails: [],
     searchText: "",
+    showSidebar: true,
+    signedIn:false,
   },
   reducers: {
     //actions
@@ -18,8 +20,11 @@ const appSlice = createSlice({
     setSearchText: (state, action) => {
         state.searchText = action.payload;
     },
+    setShowSidebar: (state, action) => {
+      state.showSidebar = !state.showSidebar;
+    },
   },
 });
 
-export const { setOpen, setEmails, setSearchText } = appSlice.actions;
+export const { setOpen, setEmails, setSearchText, setShowSidebar } = appSlice.actions;
 export default appSlice.reducer;

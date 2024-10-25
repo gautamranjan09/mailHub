@@ -6,38 +6,52 @@ import { MdOutlineDrafts, MdOutlineKeyboardArrowDown, MdOutlineWatchLater } from
 import { TbSend2 } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
+import { BsTrash } from "react-icons/bs";
+import { NavLink } from "react-router-dom";
 
 const sidebarItems = [
   {
     icon: <BiSolidInbox size={"20px"} />,
     text: "Inbox",
+    to: "/inbox"
   },
   {
     icon: <IoMdStar size={"20px"} />,
     text: "Starred",
+    to: "/starred"
   },
   {
     icon: <MdOutlineWatchLater size={"20px"} />,
     text: "Snoozed",
+    to: "/snoozed"
   },
   {
     icon: <TbSend2 size={"20px"} />,
     text: "Sent",
+    to: "/sent"
   },
   {
     icon: <MdOutlineDrafts size={"20px"} />,
     text: "Draft",
+    to: "/draft"
+  },
+  {
+    icon: <BsTrash size={"20px"} />,
+    text: "Trash",
+    to: "/trash"
   },
   {
     icon: <MdOutlineKeyboardArrowDown size={"20px"} />,
     text: "More",
+    to: "/more"
   },
 ];
 
 const Sidebar = () => {
   const dispatch =useDispatch();
+
   return (
-    <div className="w-[15%]">
+    <>
       <div className="p-3 pt-1">
         <button onClick={()=> dispatch(setOpen(true))} className="flex items-center gap-2 p-4 rounded-2xl hover:shadow-lg hover:scale-105 bg-rose-200 transition-all duration-200 ease-in-out active:scale-95">
           <LuPencil size={"20px"} /> Compose
@@ -46,14 +60,14 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sidebarItems.map((item, index) => {
           return (
-            <div key={Math.random()} className="flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 hover:bg-teal-100 transition-all duration-1000">
+            <NavLink to={item.to} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-200":"hover:bg-teal-100"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000`}>
               {item.icon}
               <p>{item.text}</p>
-            </div>
+            </NavLink>
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 
