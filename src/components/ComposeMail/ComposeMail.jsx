@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import TextEditor from "./TextEditor";
 import { useDispatch } from "react-redux";
-import { setOpen } from "../redux/appSlice";
+import { setOpen } from "../../redux/appSlice";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 
 const ComposeMail = () => {
   const [to, setTo] = useState("");
@@ -45,6 +45,7 @@ const ComposeMail = () => {
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder="Subject"
+            required
             className="w-full h-7 pb-1 pr-1 pl-1 text-sm pt-0 border-b-[1px] border-b-gray-300 focus:outline-none"
           />
         </div>

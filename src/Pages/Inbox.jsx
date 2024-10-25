@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import DropdownMenu from "./DropdownMenu";
+import DropdownMenu from "../components/UI/DropdownMenu";
 import { IoMdMore, IoMdRefresh } from "react-icons/io";
 import { MdInbox, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { GoTag } from "react-icons/go";
 import { FaUserFriends } from "react-icons/fa";
-import Messages from "./Messages";
+
+import Messages from "../components/Mail/Messages";
+
 
 const mailType = [
   {

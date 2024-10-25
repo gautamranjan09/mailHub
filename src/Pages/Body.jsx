@@ -1,7 +1,7 @@
 import React from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Layout/Sidebar";
 import { Outlet } from "react-router-dom";
-import SendMail from "./SendMail";
+import SendMail from "../components/ComposeMail/SendMail";
 
 
 const Body = () => {

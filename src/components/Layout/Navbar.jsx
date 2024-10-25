@@ -13,6 +13,8 @@ const Navbar = () => {
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  console.log("Navbar");
+  
 
   const dispatch = useDispatch();
 
@@ -47,6 +49,8 @@ const Navbar = () => {
   }, [input, emails, showSuggestions]); // Added showSuggestions to dependencies
 
   const handleSuggestionClick = (suggestion) => {
+    console.log(suggestion,"ssss");
+    
     dispatch(setSearchText(suggestion));
     setInput(suggestion.subject);
     setShowSuggestions(false); // Hide suggestions after clicking
@@ -73,7 +77,7 @@ const Navbar = () => {
     }
   };
 
-  // Handle clicking outside of suggestions to close them
+  // //Handle clicking outside of suggestions to close them
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
   //     if (!event.target.closest(".search-container")) {
@@ -115,7 +119,7 @@ const Navbar = () => {
               value={input}
               onChange={handleInputChange}
               onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setShowSuggestions(false)} // Show suggestions when input is focused
+              onBlur={() => setTimeout(() => setShowSuggestions(false),200)} // Show suggestions when input is focused
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleSearchIconClick();
@@ -133,7 +137,7 @@ const Navbar = () => {
               <li
                 key={suggestion.id}
                 className="flex flex-col px-4 py-3 hover:bg-teal-50 transition-colors duration-200 cursor-pointer"
-                onClick={() => handleSuggestionClick(suggestion)}
+                onClick={(e) => handleSuggestionClick(suggestion)}
               >
                 <div className="flex justify-between items-center">
                   <div>

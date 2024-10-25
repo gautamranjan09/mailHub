@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Navbar from "./components/shared/Navbar";
-import Body from "./components/Body";
-import Inbox from "./components/Inbox";
-import Mail from "./components/Mail";
-import SendMail from "./components/SendMail";
+import Navbar from "./components/Layout/Navbar";
+import Body from "./Pages/Body";
+import Inbox from "./Pages/Inbox";
+import Mail from "./Pages/Mail"
+import SendMail from "./components/ComposeMail/SendMail";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "./firebase";
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setEmails } from "./redux/appSlice";
 import NProgress from 'nprogress'; 
 import 'nprogress/nprogress.css'; 
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/UI/LoadingSpinner";
 
 // Define the routes
 const router = createBrowserRouter([
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/inbox/:id", // Show a specific email based on id
-        element: <Mail />,
+        element: <Mail/>,
       },
     ],
   },
