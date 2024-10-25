@@ -13,13 +13,13 @@ const ComposeMail = () => {
 
   async function handleFormSubmit(e){
     e.preventDefault();
-    console.log(to, subject, stripHtml(editorContent));
     dispatch(setOpen(false));
 
     await addDoc(collection(db, "emails"),{
       to: to,
       subject: subject,
-      message: stripHtml(editorContent),
+      message:editorContent,
+      // plainMessage: stripHtml(editorContent),
       createdAt: serverTimestamp(),
     })
 
@@ -27,12 +27,6 @@ const ComposeMail = () => {
     setSubject("");
     setEditorContent("");
   }
-
-  const stripHtml = (html) => {
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    return div.textContent || div.innerText || "";
-  };
 
   return (
     <form onSubmit={handleFormSubmit} className="flex flex-col gap-2 p-3">
@@ -43,6 +37,7 @@ const ComposeMail = () => {
             value={to}
             onChange={(e) => setTo(e.target.value)}
             placeholder="To"
+            required
             className="w-full h-7 p-1 mb-1 border-b-[1px] text-sm border-b-gray-300 focus:outline-none"
           />
           <input

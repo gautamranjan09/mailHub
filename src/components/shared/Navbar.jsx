@@ -47,7 +47,7 @@ const Navbar = () => {
   }, [input, emails, showSuggestions]); // Added showSuggestions to dependencies
 
   const handleSuggestionClick = (suggestion) => {
-    dispatch(setSearchText(suggestion.subject));
+    dispatch(setSearchText(suggestion));
     setInput(suggestion.subject);
     setShowSuggestions(false); // Hide suggestions after clicking
     setSuggestions([]);
@@ -64,25 +64,34 @@ const Navbar = () => {
     }
   };
 
-  // Handle clicking outside of suggestions to close them
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest(".search-container")) {
-        setShowSuggestions(false);
-      }
-    };
+  const handleSearchIconClick = () => {
+    
+    if (input.trim()) {
+      dispatch(setSearchText(input));
+      setShowSuggestions(false);
+      setSuggestions([]);
+    }
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // Handle clicking outside of suggestions to close them
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (!event.target.closest(".search-container")) {
+  //       setShowSuggestions(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   return (
     <div className="flex items-center justify-between mx-3 h-16">
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-6">
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <RxHamburgerMenu size={"20px"} />
           </div>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -97,19 +106,25 @@ const Navbar = () => {
       </div>
       <div className="md:block hidden w-[50%] relative search-container">
         <div className="flex justify-center items-center w-full">
-          <div className="flex items-center bg-[#dae8fd] px-1 py-1 rounded-full focus-within:bg-white focus-within:shadow-lg transition-all duration-300 ease-in-out w-[60%] focus-within:w-[100%]">
-            <div className="flex items-center w-9 h-9 justify-center rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-300 ease-in-out">
-              <IoIosSearch className="text-gray-700" size={"22px"} />
-            </div>
+          <form onSubmit={(e)=>{e.preventDefault(); handleSearchIconClick();}} className="flex items-center bg-teal-100 px-1 py-1 rounded-full focus-within:bg-white focus-within:shadow-lg transition-all duration-300 ease-in-out w-[60%] focus-within:w-[100%]">
+            <button type="submit" className="flex items-center w-9 h-9 justify-center rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-300 ease-in-out">
+              <IoIosSearch className="text-gray-700 " size={"22px"} />
+            </button>
             <input
               type="search"
               value={input}
               onChange={handleInputChange}
-              onFocus={() => setShowSuggestions(true)} // Show suggestions when input is focused
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setShowSuggestions(false)} // Show suggestions when input is focused
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearchIconClick();
+                }
+              }}
               placeholder="Search Mail"
               className="rounded-full w-full bg-transparent outline-none px-1 placeholder:text-gray-500"
             />
-          </div>
+          </form>
         </div>
 
         {showSuggestions && suggestions.length > 0 && (
@@ -117,7 +132,7 @@ const Navbar = () => {
             {suggestions.map((suggestion) => (
               <li
                 key={suggestion.id}
-                className="flex flex-col px-4 py-3 hover:bg-blue-100 transition-colors duration-200 cursor-pointer"
+                className="flex flex-col px-4 py-3 hover:bg-teal-50 transition-colors duration-200 cursor-pointer"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
                 <div className="flex justify-between items-center">
@@ -144,13 +159,13 @@ const Navbar = () => {
       </div>
       <div className="md:block hidden">
         <div className="flex items-center gap-2">
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <CiCircleQuestion size={"22px"} />
           </div>
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out hover:rotate-90">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out hover:rotate-90">
             <IoSettingsOutline size={"22px"} />
           </div>
-          <div className="p-3 rounded-full hover:bg-gray-300 cursor-pointer transition-all duration-1000 ease-in-out">
+          <div className="p-3 rounded-full hover:bg-teal-100 cursor-pointer transition-all duration-1000 ease-in-out">
             <TbGridDots size={"22px"} />
           </div>
           <div className="cursor-pointer rounded-full hover:scale-110 bg-gray-400 transition-all duration-1000 ease-in-out">

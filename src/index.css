@@ -42,6 +42,7 @@
 
 .custom-quill-editor .ql-editor {
   @apply focus:outline-none; /* Remove focus outline when editing */
+  @apply h-[220px] overflow-y-auto;
 }
 
 /* Custom NProgress styles */
@@ -95,4 +96,11 @@
   100% {
     transform: rotate(360deg); /* End state */
   }
+}
+
+.custom-list ul {
+  @apply list-disc list-inside;
+}
+.custom-list ol {
+  @apply list-decimal list-inside;
 }

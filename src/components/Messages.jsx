@@ -6,25 +6,38 @@ const Messages = () => {
   const { emails, searchText } = useSelector((state) => state.appSlice);
   const [tempEmails, setTempEmails] = useState(emails);
   const dispatch = useDispatch();
+  console.log("hello");
 
   useEffect(() => {
-    // Set a debounce timeout for filtering emails
     const debounce = setTimeout(() => {
-      const filteredEmails = emails?.filter((email) => {
-        return (
-          email?.subject?.toLowerCase().includes(searchText.toLowerCase()) ||
-          email?.to?.toLowerCase().includes(searchText.toLowerCase()) ||
-          email?.message?.toLowerCase().includes(searchText.toLowerCase())
-        );
-      });
-      setTempEmails(filteredEmails);
-    }, 1000); // 300ms debounce delay
+      if (searchText && typeof searchText === "object") {
+        // When searchText is a suggestion object (from clicking a suggestion)
+        const filteredEmails = emails?.filter((email) => {
+          return email.id === searchText.id;
+        });
+        setTempEmails(filteredEmails);
+      } else if (searchText) {
+        // When searchText is a string (from typing in the search box)
+        const filteredEmails = emails?.filter((email) => {
+          const searchLower = searchText.toLowerCase();
+          return (
+            email?.subject?.toLowerCase().includes(searchLower) ||
+            email?.to?.toLowerCase().includes(searchLower) ||
+            email?.message?.toLowerCase().includes(searchLower) ||
+            email?.id?.toLowerCase().includes(searchLower)
+          );
+        });
+        setTempEmails(filteredEmails);
+      } else {
+        // When searchText is empty
+        setTempEmails(emails);
+      }
+    }, 300); // Reduced debounce time from 1000ms to 300ms for better responsiveness
 
-    // Cleanup function to clear the timeout
     return () => {
       clearTimeout(debounce);
     };
-  }, [searchText, emails]); // Effect runs when searchText or emails change
+  }, [searchText, emails]);
 
   return (
     <div>

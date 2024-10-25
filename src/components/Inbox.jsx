@@ -48,7 +48,7 @@ const Inbox = () => {
         <div className="flex items-center gap-1">
           {mailType.map((item, index) => (
             <button
-              className={`${mailTypeSelected === item.text ? 'border-b-4 border-b-blue-600 text-blue-600' : ''} flex items-center gap-5 p-4 w-52 hover:bg-gray-100 transition-all duration-1000 ease-in-out`}
+              className={`${mailTypeSelected === item.text ? 'border-b-4 border-b-blue-600 text-blue-600' : ''} flex items-center gap-5 p-4 w-52 hover:bg-teal-50 transition-all duration-1000 ease-in-out`}
               key={item.text}
               onClick={() => setMailTypeSelected(item.text)}
             >

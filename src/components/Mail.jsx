@@ -84,8 +84,12 @@ const Mail = () => {
           <h1>{selectedEmail?.to}</h1>
           <span>to me</span>
         </div>
-        <div className="my-10">
-          <p>{selectedEmail?.message}</p>
+        <div className="my-10 custom-list">
+          {/* <p>{selectedEmail?.message}</p> */}
+          <div
+            className="formatted-content"
+            dangerouslySetInnerHTML={{ __html: selectedEmail.message }}
+          ></div>
         </div>
       </div>
     </div>

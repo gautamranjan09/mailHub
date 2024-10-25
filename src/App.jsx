@@ -72,7 +72,7 @@ function App() {
   }, [loading]);
 
   return (
-    <div className="bg-[#eff1fc] h-screen w-screen overflow-hidden">
+    <div className="bg-teal-50 h-screen w-screen overflow-hidden">
       <Navbar />
       {loading ? (
           <LoadingSpinner/>
