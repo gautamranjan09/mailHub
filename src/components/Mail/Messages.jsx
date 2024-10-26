@@ -6,7 +6,6 @@ const Messages = () => {
   const { emails, searchText } = useSelector((state) => state.appSlice);
   const [tempEmails, setTempEmails] = useState(emails);
   const dispatch = useDispatch();
-  console.log("hello");
 
   useEffect(() => {
     const debounce = setTimeout(() => {

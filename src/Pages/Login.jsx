@@ -1,6 +1,12 @@
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React, { useState } from "react";
 import { BiLoader } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { auth, provider } from "../firebase";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/appSlice";
+import Card from "../components/UI/Card";
 
 
 const Login = () => {
@@ -8,6 +14,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -18,27 +25,44 @@ const Login = () => {
     };
     const signinWithGoogle = async () => {
         setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsLoading(false);
+        
+        try{
+          const result = await signInWithPopup(auth, provider);
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const  token = credential.accessToken;
+  
+          // The signed-in user info.
+          const user = result.user;
+          const createdAtTimeStamp = Number(user.metadata.createdAt);
+          const lastLoginAtTimeStamp = Number(user.metadata.lastLoginAt);
+          const loggedInUser = {
+            displayName: user.displayName,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            phoneNumber: user.phoneNumber,
+            photoURL: user.photoURL,
+            token: user.accessToken,
+            id: user.uid,
+            createdAt: new Date(createdAtTimeStamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            lastLoginAt: new Date(lastLoginAtTimeStamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+          }
+          toast.success("User Authenticated!");
+          dispatch(setUser(loggedInUser));
+          console.log(user, loggedInUser);
+        } catch (error) {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          toast.error(errorMessage);
+        } finally{
+          setIsLoading(false);
+        }
       };
+
   return (
-    <div className="bg-slate-100 min-h-screen w-full relative flex items-center justify-center">
-      
-      {/* Animated background patterns */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Geometric patterns */}
-        <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply filter blur-lg animate-[blob_7s_infinite]" />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-rose-400 rounded-full mix-blend-multiply filter blur-lg animate-[blob_7s_infinite]"/>
-            <div className="absolute -bottom-4 left-1/2 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-lg animate-[blob_7s_infinite]"/>
-        </div>
-
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/30 via-transparent to-rose-500/30"/>
-        <div className="absolute inset-0 bg-gradient-to-tr from-slate-300/20 via-transparent to-slate-500/20" />
-      </div>
-
+    <Card>
       {/* Sign in form */}
       <div className="w-full max-w-md p-8 rounded-xl relative z-10 mx-4 backdrop-blur-3xl bg-white/10 border border-white/70 shadow-xl animate-fadeIn">
         <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-transparent to-white/10 rounded-xl -z-10"/>
@@ -121,7 +145,7 @@ const Login = () => {
             </div>
         </form>
       </div>
-    </div>
+    </Card>
   );
 };
 

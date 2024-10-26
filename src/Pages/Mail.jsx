@@ -52,35 +52,35 @@ const Mail = () => {
   }
  
   return (
-    <div className="flex-1 bg-white rounded-2xl mx-5">
+    <div className="flex-1 bg-white/70 rounded-2xl mx-5">
       <div className="flex items-center justify-between px-4">
         <div className="flex items-center gap-1 text-gray-700 py-2">
           {iconsButton.map((item, index) => (
             <div
               key={index}
               onClick={item.function}
-              className="p-2 rounded-full hover:bg-gray-100 cursor-pointer transition-all duration-1000 ease-in-out"
+              className="p-2 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-1000 ease-in-out"
             >
               {item.icon}
             </div>
           ))}
         </div>
         <div className="flex items-center gap-2">
-            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
-            <button className="rounded-full p-1 hover:bg-gray-100 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
+            <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
+            <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
         </div>
       </div>
       <div className="h-[78vh] overflow-y-auto p-4">
-        <div className="flex items-center justify-between bg-white gap-1">
+        <div className="flex items-center justify-between bg-transparent gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-medium">{selectedEmail?.subject}</h1>
             <span className="text-sm bg-gray-200 rounded-md px-2">inbox</span>
           </div>
-          <div className="flex-none text-gray-400 my-5 text-sm">
+          <div className="flex-none text-gray-500 my-5 text-sm">
             <p>{selectedEmail?.createdAt}</p>
           </div>
         </div>
-        <div className="text-gray-500 text-sm">
+        <div className="text-gray-600 text-sm">
           <h1>{selectedEmail?.to}</h1>
           <span>to me</span>
         </div>

@@ -53,14 +53,14 @@ const Sidebar = () => {
   return (
     <>
       <div className="p-3 pt-1">
-        <button onClick={()=> dispatch(setOpen(true))} className="flex items-center gap-2 p-4 rounded-2xl hover:shadow-lg hover:scale-105 bg-rose-200 transition-all duration-200 ease-in-out active:scale-95">
+        <button onClick={()=> dispatch(setOpen(true))} className="flex items-center gap-2 p-4 rounded-2xl hover:shadow-lg hover:scale-105 bg-rose-300/70 transition-all duration-200 ease-in-out active:scale-95">
           <LuPencil size={"20px"} /> Compose
         </button>
       </div>
       <div className="text-gray-500">
         {sidebarItems.map((item, index) => {
           return (
-            <NavLink to={item.to} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-200":"hover:bg-teal-100"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000`}>
+            <NavLink to={item.to} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-300/50":"hover:bg-teal-300/30"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000`}>
               {item.icon}
               <p>{item.text}</p>
             </NavLink>
