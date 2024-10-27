@@ -26,6 +26,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import Login from "./Pages/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserProfile from "./Pages/UserProfile";
 
 // Define the routes
 const createRouter = (signedIn) =>
@@ -41,6 +42,10 @@ const createRouter = (signedIn) =>
     {
       path: "/forgotpassword",
       element: !signedIn ? <ForgotPassword /> : <Navigate to="/inbox" />,
+    },
+    {
+      path: "/userprofile",
+      element: signedIn ? <UserProfile /> : <Navigate to="/" />,
     },
     {
       path: "/inbox",

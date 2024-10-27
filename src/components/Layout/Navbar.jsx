@@ -8,6 +8,7 @@ import { TbGridDots } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchText, setShowSidebar } from "../../redux/appSlice";
 import ProfilePopup from "./ProfilePopup";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { emails, showSidebar } = useSelector((state) => state.appSlice);
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Close profile popup when clicking outside
   useEffect(() => {
@@ -49,6 +51,7 @@ const Navbar = () => {
 
   const handleProfileSettings = () => {
     // Implement your profile settings logic here
+    navigate("/userprofile")
     console.log("Opening profile settings...");
     setIsProfileOpen(false);
   };
