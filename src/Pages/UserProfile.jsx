@@ -76,7 +76,7 @@ const UserProfile = () => {
     <Card>
       <div className="w-full max-w-lg p-4 mx-auto bg-white rounded-2xl shadow-xl overflow-">
         <div className="relative">
-          {/* Decorative background */}
+          {/* Decorative background*/}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-rose-50 opacity-50 rounded-xl " />
 
           {user ? (
