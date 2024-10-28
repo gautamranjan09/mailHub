@@ -1,5 +1,5 @@
 import { deleteDoc, doc } from "firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import { BiArchiveIn } from "react-icons/bi";
 import { IoMdArrowBack, IoMdMore } from "react-icons/io";
 import {
@@ -27,7 +27,7 @@ const Mail = () => {
   const deteteMailById = async (id) => {
     try {
       await deleteDoc(doc(db, "emails" , id));
-      //navigate("/inbox");
+      navigate("/inbox");
     } catch (error) {
       console.log(error);
     }
@@ -45,9 +45,16 @@ const Mail = () => {
     { icon: <IoMdMore size={"20px"} /> },
   ];
 
+  // useEffect(() => {
+  //   if (!selectedEmail) {
+  //     // If the selected email does not exist, navigate to inbox
+  //     navigate("/inbox");
+  //   }
+  // },[selectedEmail,navigate])
+
   if (!selectedEmail) {
-    // If the selected email does not exist, navigate to inbox
-    navigate("/inbox");
+    // // If the selected email does not exist, navigate to inbox
+    // navigate("/inbox");
     return null; // Prevent rendering the rest of the component
   }
  

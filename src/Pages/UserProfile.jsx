@@ -108,7 +108,7 @@ const UserProfile = () => {
                   <div className="relative flex flex-col items-center">
                     <div className="w-16 h-16 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-teal-100 to-rose-100">
                       <img
-                        src={user.photoURL || "/api/placeholder/128/128"}
+                        src={user?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />

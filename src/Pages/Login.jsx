@@ -1,20 +1,32 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiLoader } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { auth, provider } from "../firebase";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/appSlice";
 import Card from "../components/UI/Card";
+import { useCurrentUser } from "../components/hooks/useCurrentUser";
 
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { signedIn } = useSelector((state) => state.appSlice);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+      const user = auth.currentUser;
+      
+      if(user){
+        const loggedInUser = useCurrentUser(user);
+        dispatch(setUser(loggedInUser));
+        toast.success("Welcome back! You are already logged in.");
+      }
+    } ,[])
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -23,6 +35,7 @@ const Login = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       setIsLoading(false);
     };
+
     const signinWithGoogle = async () => {
         setIsLoading(true);
         
@@ -34,32 +47,22 @@ const Login = () => {
   
           // The signed-in user info.
           const user = result.user;
-          const createdAtTimeStamp = Number(user.metadata.createdAt);
-          const lastLoginAtTimeStamp = Number(user.metadata.lastLoginAt);
-          const loggedInUser = {
-            displayName: user.displayName,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            phoneNumber: user.phoneNumber,
-            photoURL: user.photoURL,
-            token: user.accessToken,
-            id: user.uid,
-            createdAt: new Date(createdAtTimeStamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-            lastLoginAt: new Date(lastLoginAtTimeStamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-          }
+          const loggedInUser = useCurrentUser(user);
+
           toast.success("User Authenticated!");
           dispatch(setUser(loggedInUser));
-          console.log(user, loggedInUser);
+          // console.log(user, loggedInUser);
         } catch (error) {
           const errorCode = error.code;
           const errorMessage = error.message;
           // The email of the user's account used.
-          const email = error.customData.email;
           toast.error(errorMessage);
         } finally{
           setIsLoading(false);
         }
       };
+
+      
 
   return (
     <Card>
@@ -73,7 +76,7 @@ const Login = () => {
         </div>
 
         <div className="mb-6">
-            <button onClick={signinWithGoogle} className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-teal-500 bg-white hover:text-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-500">
+            <button onClick={signinWithGoogle} disabled={isLoading} className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-teal-500 bg-white hover:text-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-500 disabled:opacity-50 disabled:cursor-not-allowed">
              {isLoading ? ( <><BiLoader className="w-5 h-5 animate-spin" />Loading...</> ) 
              : ( <>
                 <img src="https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png" alt="Google" className="w-5 h-4" />
@@ -137,8 +140,9 @@ const Login = () => {
                 </button>
                 <button
                   type="button"
+                  disabled={isLoading}
                   onClick={()=> navigate("/signup")}
-                  className="w-full px-4 py-2.5 text-sm font-medium text-teal-600 hover:text-white bg-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all duration-500"
+                  className="w-full px-4 py-2.5 text-sm font-medium text-teal-600 hover:text-white bg-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Create an account
                 </button>

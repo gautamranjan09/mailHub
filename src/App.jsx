@@ -10,9 +10,9 @@ import Mail from "./Pages/Mail";
 import SendMail from "./components/ComposeMail/SendMail";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmails } from "./redux/appSlice";
+import { setEmails, setUser } from "./redux/appSlice";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import LoadingSpinner from "./components/UI/LoadingSpinner";
@@ -24,9 +24,10 @@ import Trash from "./Pages/Trash";
 import SignUp from "./Pages/SignUp";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Login from "./Pages/Login";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserProfile from "./Pages/UserProfile";
+
 
 // Define the routes
 const createRouter = (signedIn) =>

@@ -6,12 +6,15 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { TbGridDots } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchText, setShowSidebar } from "../../redux/appSlice";
+import { setSearchText, setShowSidebar, setSignedIn, setUser } from "../../redux/appSlice";
 import ProfilePopup from "./ProfilePopup";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const Navbar = () => {
-  const { emails, showSidebar } = useSelector((state) => state.appSlice);
+  const { emails, user } = useSelector((state) => state.appSlice);
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -43,10 +46,19 @@ const Navbar = () => {
     setIsProfileOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout =async () => {
     // Implement your logout logic here
+    try{
+      await signOut(auth);
+      dispatch(setUser(""));
+      toast.success("Logged out successfully!");
+    }catch(error){
+      toast.error(error.message);
+    }finally{
+      setIsProfileOpen(false);
+    }
     console.log("Logging out...");
-    setIsProfileOpen(false);
+    
   };
 
   const handleProfileSettings = () => {
@@ -220,7 +232,7 @@ const Navbar = () => {
               className="cursor-pointer rounded-full hover:scale-110 bg-gray-400 transition-all duration-1000 ease-in-out"
             >
               <Avatar
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"
+                src={user?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
                 size="35"
                 round={true}
               />

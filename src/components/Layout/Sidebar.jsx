@@ -13,7 +13,8 @@ const sidebarItems = [
   {
     icon: <BiSolidInbox size={"20px"} />,
     text: "Inbox",
-    to: "/inbox"
+    to: "/inbox",
+    count:23,
   },
   {
     icon: <IoMdStar size={"20px"} />,
@@ -60,9 +61,12 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sidebarItems.map((item, index) => {
           return (
-            <NavLink to={item.to} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-300/50":"hover:bg-teal-300/30"} flex items-center gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000`}>
+            <NavLink to={item.to} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-300/50 text-black":"hover:bg-teal-300/30"} flex items-center justify-between gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000`}>
+              <div className="flex items-center gap-4">
               {item.icon}
               <p>{item.text}</p>
+              </div>
+              {item.count && (<span className="text-sm font-medium px-2.5 py-0.5 rounded-full">{item.count}</span>)}
             </NavLink>
           );
         })}

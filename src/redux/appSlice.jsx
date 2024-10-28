@@ -27,9 +27,13 @@ const appSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setSignedIn: (state, action) => {
+      state.signedIn = action.payload;
+    },
 
   },
 });
 
-export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser } = appSlice.actions;
+export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser,  setSignedIn } = appSlice.actions;
+
 export default appSlice.reducer;
