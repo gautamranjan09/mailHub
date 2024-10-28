@@ -13,10 +13,13 @@ import {
 } from "lucide-react";
 import Card from "../components/UI/Card";
 import { setUser } from "../redux/appSlice";
+import { IoMdArrowBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 
 const UserProfile = () => {
   const user = useSelector((state) => state.appSlice.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -81,6 +84,7 @@ const UserProfile = () => {
 
           {user ? (
             <div className="relative text-center p-3">
+             <div onClick={()=> navigate("/inbox")} className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-500"> <IoMdArrowBack size={"20px"}  /></div>
               <h2 className="text-3xl font-bold text-gray-800">
                 User Profile
               </h2>

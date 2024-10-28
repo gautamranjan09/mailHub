@@ -62,16 +62,12 @@ const ForgotPassword = () => {
               <><BiLoader className="w-5 h-5 animate-spin mr-2" />Loading...</>
             ) : 'Forgot Password'}
           </button>
-          <button
-            type="button"
-            disabled={isLoading}
-            onClick={() => navigate("/")}
-            className="w-full px-4 py-2.5 text-sm font-medium text-teal-600 hover:text-white bg-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-           Go to Sign in
-          </button>
         </div>
       </form>
+      <div className="text-center mt-2">
+        <span className="text-gray-500 text-sm"> Remember your password?</span>
+        <button disabled={isLoading} onClick={() => navigate("/") } type="button" className="ml-2 text-sm text-teal-400 hover:text-teal-500 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"> Back to Sign in</button>
+      </div>
     </div>
   </Card>
   )

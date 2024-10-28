@@ -41,7 +41,7 @@ const Messages = () => {
   return (
     <div>
       {tempEmails &&
-        tempEmails?.map((email) => <Message key={email.id} email={email} />)}
+        tempEmails?.map((email, index) => <Message key={email.id} email={email} index={index}/>)}
     </div>
   );
 };

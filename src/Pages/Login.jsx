@@ -75,7 +75,7 @@ const Login = () => {
             <p className="text-slate-400 mt-2">Welcome back! Please enter your details</p>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 animate-slideIn">
             <button onClick={signinWithGoogle} disabled={isLoading} className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-teal-500 bg-white hover:text-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-500 disabled:opacity-50 disabled:cursor-not-allowed">
              {isLoading ? ( <><BiLoader className="w-5 h-5 animate-spin" />Loading...</> ) 
              : ( <>
@@ -90,7 +90,7 @@ const Login = () => {
             <div className="border-t border-gray-300 w-full"/>
         </div>
         <form onSubmit={handleSubmit} >
-            <div className="relative animate-slideIn">
+            <div className="relative animate-slideIn [animation-delay:400ms] opacity-0">
                 <input
                   id="email"
                   type="email"
@@ -107,7 +107,7 @@ const Login = () => {
                   Email
                 </label>
             </div>
-            <div className="relative animate-slideIn">
+            <div className="relative animate-slideIn [animation-delay:800ms] opacity-0">
                 <input
                   id="password"
                   type="password"
@@ -125,10 +125,10 @@ const Login = () => {
                 </label>
             </div>
             <div className="flex items-center justify-end mb-6">
-                <button onClick={() => navigate("/forgotpassword") } type="button" className="text-sm text-teal-400 hover:text-teal-500 font-medium transition-colors duration-200">Forgot password?</button>
+                <button disabled={isLoading} onClick={() => navigate("/forgotpassword") } type="button" className="text-sm text-teal-400 hover:text-teal-500 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Forgot password?</button>
             </div>
 
-            <div className="flex flex-col space-y-4 animate-slideIn">
+            <div className="flex flex-col space-y-4 animate-slideIn [animation-delay:1200ms] opacity-0">
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -138,16 +138,14 @@ const Login = () => {
                       <><BiLoader className="w-4 h-4 animate-spin mr-2" />Loading...</>
                       ) : 'Sign in'}
                 </button>
-                <button
-                  type="button"
-                  disabled={isLoading}
-                  onClick={()=> navigate("/signup")}
-                  className="w-full px-4 py-2.5 text-sm font-medium text-teal-600 hover:text-white bg-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Create an account
-                </button>
+                
+
             </div>
         </form>
+        <div className="text-center mt-2">
+          <span className="text-gray-500 text-sm">or Don't Have An Account?</span>
+          <button disabled={isLoading} onClick={() => navigate("/signup") } type="button" className="ml-2 text-sm text-teal-400 hover:text-teal-500 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Sign up</button>
+        </div>
       </div>
     </Card>
   );

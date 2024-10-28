@@ -111,10 +111,10 @@
     transform: translate(0, 0) scale(1);
   }
   33% {
-    transform: translate(30px, -50px) scale(1.1);
+    transform: translate(10rem, -3.9rem) scale(1.3);
   }
   66% {
-    transform: translate(-20px, 20px) scale(0.9);
+    transform: translate(-8rem, 4rem) scale(0.8);
   }
   100% {
     transform: translate(0, 0) scale(1);
@@ -142,6 +142,16 @@
     transform: translateX(0);
   }
 }
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* Add these custom animation classes */
 @layer utilities {
@@ -150,6 +160,9 @@
   }
   
   .animate-slideIn {
-    animation: slideIn 0.9s ease-out forwards;
+    animation: slideIn 0.5s ease-out forwards;
+  }
+  .animate-slideUp {
+    animation: slideUp 0.4s ease-out forwards;
   }
 }

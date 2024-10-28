@@ -3,7 +3,7 @@ import { MdCropSquare } from "react-icons/md";
 import { RiStarLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
-const Message = ({ email }) => {
+const Message = ({ email, index }) => {
   const navigate = useNavigate();
   const openMail = () => {
     navigate(`/inbox/${email.id}`);
@@ -17,7 +17,7 @@ const Message = ({ email }) => {
 
 
   return (
-    <div onClick={openMail} className="flex items-start justify-between border-b border-gray-200 px-4 py-2 text-sm cursor-pointer  hover:shadow-md hover:translate-y-1 hover:bg-rose-300/40 transition-all duration-1000 ease-in-out">
+    <div onClick={openMail} style={{ '--delay': `${index * 400}ms` }} className="flex items-start justify-between border-b border-gray-200 px-4 py-2 text-sm cursor-pointer  hover:shadow-md hover:translate-y-1 hover:bg-rose-300/40 transition-all duration-1000 ease-in-out animate-slideUp opacity-0 [animation-delay:var(--delay)]">
         <div className="flex items-center gap-3">
             <div className="flex-none text-gray-300">
                 <MdCropSquare className="w-5 h-5" /> 

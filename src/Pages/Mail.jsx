@@ -66,18 +66,19 @@ const Mail = () => {
             <div
               key={index}
               onClick={item.function}
-              className="p-2 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-1000 ease-in-out"
+              style={{ '--delay': `${index * 300}ms` }}
+              className="p-2 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-1000 ease-in-out animate-slideIn opacity-0 [animation-delay:var(--delay)]"
             >
               {item.icon}
             </div>
           ))}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 animate-slideIn">
             <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowLeft size={'24px'}/></button>
             <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out"> <MdKeyboardArrowRight size={'24px'}/></button>
         </div>
       </div>
-      <div className="h-[78vh] overflow-y-auto p-4">
+      <div className="h-[78vh] overflow-y-auto p-4 animate-fadeIn">
         <div className="flex items-center justify-between bg-transparent gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-medium">{selectedEmail?.subject}</h1>

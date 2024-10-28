@@ -4,7 +4,7 @@ import { IoMdStar } from "react-icons/io";
 import { LuPencil } from "react-icons/lu";
 import { MdOutlineDrafts, MdOutlineKeyboardArrowDown, MdOutlineWatchLater } from "react-icons/md";
 import { TbSend2 } from "react-icons/tb";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
 import { BsTrash } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
@@ -50,6 +50,7 @@ const sidebarItems = [
 
 const Sidebar = () => {
   const dispatch =useDispatch();
+  const { showSidebar } = useSelector((state) => state.appSlice);
 
   return (
     <>
@@ -61,7 +62,7 @@ const Sidebar = () => {
       <div className="text-gray-500">
         {sidebarItems.map((item, index) => {
           return (
-            <NavLink to={item.to} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-300/50 text-black":"hover:bg-teal-300/30"} flex items-center justify-between gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000`}>
+            <NavLink to={item.to} style={{ '--delay': `${index * 700}ms` }} key={Math.random()} className={({ isActive })=> `${isActive ? "bg-rose-300/50 text-black":"hover:bg-teal-300/30"} flex items-center justify-between gap-4 pl-6 py-1 rounded-r-full cursor-pointer my-2 transition-all duration-1000 ${showSidebar && 'animate-slideIn opacity-0 [animation-delay:var(--delay)]'}`}>
               <div className="flex items-center gap-4">
               {item.icon}
               <p>{item.text}</p>
