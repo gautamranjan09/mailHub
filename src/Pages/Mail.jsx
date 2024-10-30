@@ -17,6 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 
 const Mail = () => {
+  const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const navigate = useNavigate();
   const{ id } = useParams();
   const { emails } = useSelector((state) => state.appSlice);
@@ -27,14 +28,14 @@ const Mail = () => {
   const deteteMailById = async (id) => {
     try {
       await deleteDoc(doc(db, "emails" , id));
-      navigate("/inbox");
+      navigate(`/${selectedMailPath}`);
     } catch (error) {
       console.log(error);
     }
   }
  
   const iconsButton = [
-    { icon: <IoMdArrowBack size={"20px"} />, function:()=>navigate('/inbox')},
+    { icon: <IoMdArrowBack size={"20px"} />, function:()=>navigate(`/${selectedMailPath}`)},
     { icon: <BiArchiveIn size={"20px"} /> },
     { icon: <MdOutlineReport size={"20px"} /> },
     { icon: <MdDeleteOutline size={"20px"} />, function: ()=> deteteMailById(id) },
@@ -45,12 +46,12 @@ const Mail = () => {
     { icon: <IoMdMore size={"20px"} /> },
   ];
 
-  // useEffect(() => {
-  //   if (!selectedEmail) {
-  //     // If the selected email does not exist, navigate to inbox
-  //     navigate("/inbox");
-  //   }
-  // },[selectedEmail,navigate])
+  useEffect(() => {
+    if (!selectedEmail) {
+      // If the selected email does not exist, navigate to inbox
+      navigate(`/${selectedMailPath}`);
+    }
+  },[selectedEmail, navigate])
 
   if (!selectedEmail) {
     // // If the selected email does not exist, navigate to inbox

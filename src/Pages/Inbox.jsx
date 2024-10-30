@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DropdownMenu from "../components/UI/DropdownMenu";
 import { IoMdMore, IoMdRefresh } from "react-icons/io";
 import { MdInbox, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -6,7 +6,8 @@ import { GoTag } from "react-icons/go";
 import { FaUserFriends } from "react-icons/fa";
 
 import Messages from "../components/Mail/Messages";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedMailPath } from "../redux/navSlice";
 
 
 const mailType = [
@@ -26,7 +27,12 @@ const mailType = [
 
 const Inbox = () => {
   const emails = useSelector((state) => state.appSlice.emails);
+  const dispatch = useDispatch();
   const [mailTypeSelected, setMailTypeSelected] = useState("Primary");
+
+  useEffect(()=>{
+    dispatch(setSelectedMailPath('inbox'));
+  },[]);
 
   return (
     <div className="flex-1  bg-white/70 rounded-2xl mx-5">

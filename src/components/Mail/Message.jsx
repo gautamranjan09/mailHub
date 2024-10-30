@@ -1,12 +1,14 @@
 import React from "react";
 import { MdCropSquare } from "react-icons/md";
 import { RiStarLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Message = ({ email, index }) => {
+  const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const navigate = useNavigate();
   const openMail = () => {
-    navigate(`/inbox/${email.id}`);
+    navigate(`/${selectedMailPath}/${email.id}`);
   };
   
   const stripHtml = (html) => {

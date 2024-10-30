@@ -74,7 +74,7 @@ const Login = () => {
           toast.success("Welcome to Mailhub!");
           dispatch(setUser(loggedInUser));
           dispatch(setProfile(loggedInUser));
-          createDoc(loggedInUser, email);
+          createDoc(loggedInUser, loggedInUser.email);
           // console.log(user, loggedInUser);
         } catch (error) {
           const errorCode = error.code;

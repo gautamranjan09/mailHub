@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import TextEditor from "./TextEditor";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const ComposeMail = () => {
+  const user = useSelector((state)=> state.appSlice.user)
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [editorContent, setEditorContent] = useState("");
@@ -17,6 +18,7 @@ const ComposeMail = () => {
 
     await addDoc(collection(db, "emails"),{
       to: to,
+      from:user?.email,
       subject: subject,
       message:editorContent,
       // plainMessage: stripHtml(editorContent),
