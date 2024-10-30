@@ -30,7 +30,7 @@ const Message = ({ email, index }) => {
             </div>
         </div>
         <div className="flex-1 ml-4 flex items-center">
-            <p className="text-black font-bold  w-64">{email?.to}</p>
+            <p className="text-black font-bold  w-64">{(selectedMailPath === "inbox" && email?.from) || (selectedMailPath === "sent" && email?.to)}</p>
             <p className="text-gray-600 truncate inline-block w-[35rem]"><strong>{email?.subject}</strong>-{stripHtml(email?.message)}</p>
         </div>
         <div className="flex-none text-gray-400 text-sm">

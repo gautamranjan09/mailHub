@@ -8,7 +8,7 @@
 }
 
 .ql-container {
-  @apply min-h-[220px];
+  @apply min-h-[220px] max-w-[480px];
 }
 
 .ql-editor {
@@ -42,7 +42,7 @@
 
 .custom-quill-editor .ql-editor {
   @apply focus:outline-none; /* Remove focus outline when editing */
-  @apply h-[220px] overflow-y-auto;
+  @apply h-[220px] w-[480px] overflow-y-auto;
 }
 
 /* Custom NProgress styles */

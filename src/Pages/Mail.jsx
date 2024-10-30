@@ -83,15 +83,15 @@ const Mail = () => {
         <div className="flex items-center justify-between bg-transparent gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-medium">{selectedEmail?.subject}</h1>
-            <span className="text-sm bg-gray-200 rounded-md px-2">inbox</span>
+            <span className="text-sm bg-gray-200 rounded-md px-2">{(selectedMailPath === "inbox" && "inbox") || (selectedMailPath === "sent" && "sent")}</span>
           </div>
           <div className="flex-none text-gray-500 my-5 text-sm">
             <p>{selectedEmail?.createdAt}</p>
           </div>
         </div>
-        <div className="text-gray-600 text-sm">
-          <h1>{selectedEmail?.to}</h1>
-          <span>to me</span>
+        <div className="flex gap-3 items-center">
+          <span className="text-gray-600">{(selectedMailPath === "inbox" && "from:") || (selectedMailPath === "sent" && "to:")}</span>
+          <h1 className="font-medium text-lg text-black">{(selectedMailPath === "inbox" && selectedEmail?.from) || (selectedMailPath === "sent" && selectedEmail?.to)}</h1>
         </div>
         <div className="my-10 custom-list">
           {/* <p>{selectedEmail?.message}</p> */}
