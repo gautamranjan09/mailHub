@@ -9,6 +9,7 @@ const appSlice = createSlice({
     showSidebar: true,
     signedUp:false,
     user: null,
+    profile: null,
   },
   reducers: {
     //actions
@@ -30,10 +31,13 @@ const appSlice = createSlice({
     setSignedUp: (state, action) => {
       state.signedIn = action.payload;
     },
-
+    setProfile: (state, action) => {
+      state.profile = action.payload;
+    },
   },
 });
 
-export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser,  setSignedIn } = appSlice.actions;
+export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser, setSignedIn, setProfile } = appSlice.actions;
+
 
 export default appSlice.reducer;

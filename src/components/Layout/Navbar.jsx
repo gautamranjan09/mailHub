@@ -14,7 +14,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 
 const Navbar = () => {
-  const { emails, user } = useSelector((state) => state.appSlice);
+  const { emails, user, profile } = useSelector((state) => state.appSlice);
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -232,7 +232,7 @@ const Navbar = () => {
               className="cursor-pointer rounded-full hover:scale-110 bg-gray-400 transition-all duration-1000 ease-in-out"
             >
               <Avatar
-                src={user?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
+                src={profile?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
                 size="35"
                 round={true}
               />

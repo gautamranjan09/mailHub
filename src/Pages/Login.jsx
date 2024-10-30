@@ -2,12 +2,13 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 
 import React, { useEffect, useState } from "react";
 import { BiLoader } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { auth, provider } from "../firebase";
+import { auth, db, provider } from "../firebase";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../redux/appSlice";
+import { setProfile, setUser } from "../redux/appSlice";
 import Card from "../components/UI/Card";
 import { useCurrentUser } from "../components/hooks/useCurrentUser";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 
 const Login = () => {
@@ -18,15 +19,26 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    useEffect(()=>{
-      const user = auth.currentUser;
-      
-      if(user){
-        const loggedInUser = useCurrentUser(user);
-        dispatch(setUser(loggedInUser));
-        toast.success("Welcome back to Mailhub! You are already logged in.");
-      }
-    } ,[])
+   useEffect(() => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const loggedInUser = useCurrentUser(user);
+      dispatch(setUser(loggedInUser));
+      const unsubscribe = onSnapshot(
+        doc(db, loggedInUser.email, loggedInUser.email),
+        (doc) => {
+          console.log(doc.data());
+          dispatch(setProfile(doc.data()));
+        },
+        (error) => {
+          console.error("Error fetching document:", error);
+        }
+      );
+
+      toast.success("Welcome back to Mail hub! You are already logged in.");
+    }
+  }, []);
   
     const loginUsingEmail = async (e) => {
       e.preventDefault();
@@ -36,6 +48,8 @@ const Login = () => {
        const userCredential = await signInWithEmailAndPassword(auth, email, password);
        const loggedInUser = useCurrentUser(userCredential.user);
        dispatch(setUser(loggedInUser));
+       dispatch(setProfile(loggedInUser));
+       createDoc(loggedInUser, email);
        toast.success("Welcome to Mailhub!");
       }catch(error){
         toast.error(error.message);
@@ -59,6 +73,8 @@ const Login = () => {
 
           toast.success("Welcome to Mailhub!");
           dispatch(setUser(loggedInUser));
+          dispatch(setProfile(loggedInUser));
+          createDoc(loggedInUser, email);
           // console.log(user, loggedInUser);
         } catch (error) {
           const errorCode = error.code;
@@ -69,6 +85,14 @@ const Login = () => {
           setIsLoading(false);
         }
       };
+
+    const createDoc = async (loggedInUser, email) =>{
+      try{
+        await setDoc(doc(db, email, email), {...loggedInUser});
+      }catch(error){
+        console.log(error.message);
+      }
+    }
 
   return (
     <Card>

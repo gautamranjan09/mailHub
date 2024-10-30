@@ -3,11 +3,12 @@ import { BiLoader } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/UI/Card';
 import { toast } from 'react-toastify';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/appSlice';
+import { setProfile, setUser } from '../redux/appSlice';
 import { useCurrentUser } from '../components/hooks/useCurrentUser';
+import { doc, setDoc } from 'firebase/firestore';
 
 
 const SignUp = () => {
@@ -35,7 +36,9 @@ const SignUp = () => {
       await updateProfile(user, {displayName: name});
       // updating redux
       const loggedInUser = useCurrentUser(user);
+      createDoc(loggedInUser, email);
       dispatch(setUser(loggedInUser));
+      dispatch(setProfile(loggedInUser));
       toast.success("Account created successfully!");
       //clear input field
       setEmail("");
@@ -51,6 +54,14 @@ const SignUp = () => {
       setIsLoading(false);
     }
   };
+
+  const createDoc = async (loggedInUser, email) =>{
+    try{
+      await setDoc(doc(db, email, email), {...loggedInUser});
+    }catch(error){
+      console.log(error.message);
+    }
+  }
 
   useEffect(()=>{
     // Update form validity status

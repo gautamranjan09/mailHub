@@ -12,38 +12,44 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Card from "../components/UI/Card";
-import { setUser } from "../redux/appSlice";
+import { setProfile, setUser } from "../redux/appSlice";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
-import { sendEmailVerification } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
+import { useCurrentUser } from "../components/hooks/useCurrentUser";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
 
 const UserProfile = () => {
   const user = useSelector((state) => state.appSlice.user);
+  const profile = useSelector((state) => state.appSlice.profile);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    displayName: user?.displayName || "",
-    phoneNumber: user?.phoneNumber || "",
-    photoURL: user?.photoURL || "",
+    displayName: profile?.displayName || "",
+    phoneNumber: profile?.phoneNumber || "",
+    photoURL: profile?.photoURL || "",
   });
 
   const [isEditing, setIsEditing] = useState({
-    displayName: !user?.displayName,
-    phoneNumber: !user?.phoneNumber,
-    photoURL: !user?.photoURL,
+    displayName: !profile?.displayName,
+    phoneNumber: !profile?.phoneNumber,
+    photoURL: !profile?.photoURL,
   });
 
   const handleVerifyEmail = async() => {
     // implement email verification logic here
-    // try{
-    //   await sendEmailVerification(auth.currentUser);
-    //   toast.success(`Verification email sent to ${user.email}! Please check your inbox`);
-    // }catch(error){
-    //   toast.error(error.message);
-    // }
+    try{
+      await sendEmailVerification(auth.currentUser);
+      const updatedUser = useCurrentUser(auth.currentUser);
+      dispatch(setUser(updatedUser));
+      dispatch(setProfile(updatedUser));
+      toast.success(`Verification email sent to ${profile.email}! Please check your inbox`);
+    }catch(error){
+      toast.error(error.message);
+    }
   };
 
   const handleChange = (e) => {
@@ -54,14 +60,27 @@ const UserProfile = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleProfileSubmit = async (event) => {
     event.preventDefault();
-    const updatedUser = {
-      ...user,
-      ...formData,
-    };
-    dispatch(setUser(updatedUser));
-    toast.success("Profile updated successfully!");
+
+    try{
+      await updateProfile(auth.currentUser, {
+        displayName: formData?.displayName,
+        //phoneNumber: formData?.phoneNumber,
+        photoURL: formData?.photoURL,
+      });
+      const updatedUser = useCurrentUser(auth.currentUser);
+      await updateDoc(doc(db, profile.email, profile.email), {
+        displayName: formData?.displayName,
+        phoneNumber: formData?.phoneNumber,
+        photoURL: formData?.photoURL,
+      });
+      dispatch(setUser(updatedUser));
+      dispatch(setProfile(updatedUser));
+      toast.success("Profile updated successfully!");
+    }catch(error){
+      toast.error(error.message);
+    }
   };
 
   const getInputClass = (isEditable) => `
@@ -94,7 +113,7 @@ const UserProfile = () => {
           {/* Decorative background*/}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-rose-50 opacity-50 rounded-xl " />
 
-          {user ? (
+          {profile ? (
             <div className="relative text-center p-3">
              <div onClick={()=> navigate("/inbox")} className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-500"> <IoMdArrowBack size={"20px"}  /></div>
               <h2 className="text-3xl font-bold text-gray-800">
@@ -104,10 +123,10 @@ const UserProfile = () => {
 
               {/* Email Verification Status */}
               <div
-                onClick={!user.emailVerified ? handleVerifyEmail : null} // Only adds onClick if email is not verified
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${user.emailVerified ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-700 cursor-pointer hover:shadow-lg hover:scale-105 hover:bg-rose-300/40 transition-all duration-200 ease-in-out active:scale-95"}`}
+                onClick={!profile.emailVerified ? handleVerifyEmail : null} // Only adds onClick if email is not verified
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${profile.emailVerified ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-700 cursor-pointer hover:shadow-lg hover:scale-102 hover:bg-rose-300/40 transition-all duration-200 ease-in-out active:scale-98"}`}
               >
-                {user.emailVerified ? (
+                {profile.emailVerified ? (
                   <>
                     <CheckCircle className="w-4 h-4 mr-1.5" />
                     Email Verified
@@ -120,19 +139,19 @@ const UserProfile = () => {
                 )}
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-2">
+              <form onSubmit={handleProfileSubmit} className="space-y-2">
                 {/* Profile Display Section */}
                   <div className="relative flex flex-col items-center">
                     <div className="w-16 h-16 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-teal-100 to-rose-100">
                       <img
-                        src={user?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
+                        src={profile?.photoURL || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7oMra0QkSp_Z-gShMOcCIiDF5gc_0VKDKDg&s"}
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />
                     </div>
                   <div className="flex items-center mt-1">
                     <h3 className="text-lg font-semibold text-gray-700">
-                      {user.email}
+                      {profile.email}
                     </h3>
                   </div>
                 </div>
@@ -227,7 +246,7 @@ const UserProfile = () => {
                         Account Created
                       </label>
                       <div className="text-gray-600 text-left">
-                        {user.createdAt}
+                        {profile.createdAt}
                       </div>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-2 border border-gray-100">
@@ -236,7 +255,7 @@ const UserProfile = () => {
                         Last Login
                       </label>
                       <div className="text-gray-600 text-left">
-                        {user.lastLoginAt}
+                        {profile.lastLoginAt}
                       </div>
                     </div>
                   </div>
