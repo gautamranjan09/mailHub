@@ -48,7 +48,7 @@ const Messages = ({ emails }) => {
     return () => {
       clearTimeout(debounce);
     };
-  }, [searchText, filterMails]);
+  }, [searchText, filterMails.current]);
 
   return (
     <div>
