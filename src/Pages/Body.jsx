@@ -6,7 +6,7 @@ import Navbar from "../components/Layout/Navbar";
 import Card from "../components/UI/Card";
 
 const Body = () => {
-  const { showSidebar } = useSelector((state) => state.appSlice);
+  const showSidebar  = useSelector((state) => state.appSlice.showSidebar);
 
   return (
     <Card>

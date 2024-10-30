@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { BiLoader } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -24,16 +24,24 @@ const Login = () => {
       if(user){
         const loggedInUser = useCurrentUser(user);
         dispatch(setUser(loggedInUser));
-        toast.success("Welcome back! You are already logged in.");
+        toast.success("Welcome back to Mailhub! You are already logged in.");
       }
     } ,[])
   
-    const handleSubmit = async (e) => {
+    const loginUsingEmail = async (e) => {
       e.preventDefault();
       setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setIsLoading(false);
+
+      try {
+       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+       const loggedInUser = useCurrentUser(userCredential.user);
+       dispatch(setUser(loggedInUser));
+       toast.success("Welcome to Mailhub!");
+      }catch(error){
+        toast.error(error.message);
+      }finally{
+        setIsLoading(false);
+      }
     };
 
     const signinWithGoogle = async () => {
@@ -49,7 +57,7 @@ const Login = () => {
           const user = result.user;
           const loggedInUser = useCurrentUser(user);
 
-          toast.success("User Authenticated!");
+          toast.success("Welcome to Mailhub!");
           dispatch(setUser(loggedInUser));
           // console.log(user, loggedInUser);
         } catch (error) {
@@ -61,8 +69,6 @@ const Login = () => {
           setIsLoading(false);
         }
       };
-
-      
 
   return (
     <Card>
@@ -89,7 +95,7 @@ const Login = () => {
             <div className="bg-white px-4 text-sm text-gray-500">or</div>
             <div className="border-t border-gray-300 w-full"/>
         </div>
-        <form onSubmit={handleSubmit} >
+        <form onSubmit={loginUsingEmail} >
             <div className="relative animate-slideIn [animation-delay:400ms] opacity-0">
                 <input
                   id="email"

@@ -2,18 +2,27 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/UI/Card';
 import { BiLoader } from 'react-icons/bi';
+import { toast } from 'react-toastify';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsLoading(false);
+
+    try{
+      await sendPasswordResetEmail(auth, email);
+      toast.success('Password reset email sent successfully! Check  your email.');
+    }catch(error){
+      toast.error(error.message)
+    }finally{
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -32,7 +41,7 @@ const ForgotPassword = () => {
         <div className="border-t border-gray-300 w-full"></div>
       </div>
       
-      <form onSubmit={handleSubmit} className='space-y-5'>
+      <form onSubmit={handleForgotPassword} className='space-y-5'>
       
         <div className="relative animate-slideIn">
           <input

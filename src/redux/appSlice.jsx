@@ -7,7 +7,7 @@ const appSlice = createSlice({
     emails: [],
     searchText: "",
     showSidebar: true,
-    signedIn:false,
+    signedUp:false,
     user: null,
   },
   reducers: {
@@ -27,7 +27,7 @@ const appSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
-    setSignedIn: (state, action) => {
+    setSignedUp: (state, action) => {
       state.signedIn = action.payload;
     },
 

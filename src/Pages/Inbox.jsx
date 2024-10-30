@@ -6,6 +6,7 @@ import { GoTag } from "react-icons/go";
 import { FaUserFriends } from "react-icons/fa";
 
 import Messages from "../components/Mail/Messages";
+import { useSelector } from "react-redux";
 
 
 const mailType = [
@@ -24,6 +25,7 @@ const mailType = [
 ];
 
 const Inbox = () => {
+  const emails = useSelector((state) => state.appSlice.emails);
   const [mailTypeSelected, setMailTypeSelected] = useState("Primary");
 
   return (
@@ -58,7 +60,7 @@ const Inbox = () => {
             </button>
           ))}
         </div>
-        <Messages />
+        <Messages emails={emails}/>
       </div>
     </div>
   );

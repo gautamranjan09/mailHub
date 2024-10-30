@@ -2,11 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { BiLoader } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/UI/Card';
+import { toast } from 'react-toastify';
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/appSlice';
+import { useCurrentUser } from '../components/hooks/useCurrentUser';
 
 
 const SignUp = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -16,17 +22,39 @@ const SignUp = () => {
   const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const signupWithEmail = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsLoading(false);
+    
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Signed up
+      const user = userCredential.user;
+      
+      // Profile update with name
+      await updateProfile(user, {displayName: name});
+      // updating redux
+      const loggedInUser = useCurrentUser(user);
+      dispatch(setUser(loggedInUser));
+      toast.success("Account created successfully!");
+      //clear input field
+      setEmail("");
+      setName("");
+      setPassword("");
+      setConfirmPassword("");
+    }catch(error){
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ...
+      toast.error(errorMessage);
+    }finally{
+      setIsLoading(false);
+    }
   };
 
   useEffect(()=>{
     // Update form validity status
-    const isEmailValid = email.endsWith("@mailhub.com");
+    const isEmailValid = email.includes("@");
     const arePasswordMatching = password === confirmPassword;
     const isPasswordValid = password.length >= 6;
     const isNameValid  = name.trim().length >= 3;
@@ -51,7 +79,7 @@ const SignUp = () => {
           <div className="border-t border-gray-300 w-full"></div>
         </div>
         
-        <form onSubmit={handleSubmit} className='space-y-5'>
+        <form onSubmit={signupWithEmail} className='space-y-5'>
         <div className="relative animate-slideIn">
             <input
               id="name"
@@ -76,18 +104,18 @@ const SignUp = () => {
               value={email}
               onBlur={()=> setIsEmailTouched(true)}
               onChange={(e) => setEmail(e.target.value)}
-              className={`block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-teal-400 peer ${isEmailTouched && !email.endsWith("@mailhub.com") && "border-rose-600 focus:border-rose-600"}`}
+              className={`block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-teal-400 peer ${isEmailTouched && !email.includes("@") && "border-rose-600 focus:border-rose-600"}`}
               placeholder=" "
-              pattern="^[a-zA-Z0-9._%+-]+@mailhub\.com$" // Pattern to validate email ending with @mailhub.com
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" // Pattern to validate email includes @
               required
             />
             <label
               htmlFor="email"
-              className={`absolute text-sm text-gray-500 duration-500 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-teal-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 ${isEmailTouched && !email.endsWith("@mailhub.com") && "text-rose-600 peer-focus:text-rose-600 peer-placeholder-shown:top-6"}`}
+              className={`absolute text-sm text-gray-500 duration-500 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-teal-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 ${isEmailTouched && !email.includes("@") && "text-rose-600 peer-focus:text-rose-600 peer-placeholder-shown:top-6"}`}
             >
               Email
             </label>
-            {isEmailTouched && !email.endsWith("@mailhub.com") && (<p className='text-rose-600 text-sm px-2'>Email must end with @mailhub.com</p>)}
+            {isEmailTouched && !email.includes("@") && (<p className='text-rose-600 text-sm px-2'>Enter a valid Email id</p>)}
           </div>
           <div className="relative animate-slideIn [animation-delay:800ms] opacity-0">
             <input

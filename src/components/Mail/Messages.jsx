@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 
-const Messages = () => {
-  const { emails, searchText } = useSelector((state) => state.appSlice);
+const Messages = ({ emails }) => {
+  const searchText = useSelector((state) => state.appSlice.searchText);
   const [tempEmails, setTempEmails] = useState(emails);
   const dispatch = useDispatch();
 

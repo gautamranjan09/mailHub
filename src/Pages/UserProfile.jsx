@@ -15,6 +15,8 @@ import Card from "../components/UI/Card";
 import { setUser } from "../redux/appSlice";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { sendEmailVerification } from "firebase/auth";
 
 
 const UserProfile = () => {
@@ -33,6 +35,16 @@ const UserProfile = () => {
     phoneNumber: !user?.phoneNumber,
     photoURL: !user?.photoURL,
   });
+
+  const handleVerifyEmail = async() => {
+    // implement email verification logic here
+    // try{
+    //   await sendEmailVerification(auth.currentUser);
+    //   toast.success(`Verification email sent to ${user.email}! Please check your inbox`);
+    // }catch(error){
+    //   toast.error(error.message);
+    // }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,7 +104,8 @@ const UserProfile = () => {
 
               {/* Email Verification Status */}
               <div
-                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${user.emailVerified ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-700"}`}
+                onClick={!user.emailVerified ? handleVerifyEmail : null} // Only adds onClick if email is not verified
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${user.emailVerified ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-700 cursor-pointer hover:shadow-lg hover:scale-105 hover:bg-rose-300/40 transition-all duration-200 ease-in-out active:scale-95"}`}
               >
                 {user.emailVerified ? (
                   <>

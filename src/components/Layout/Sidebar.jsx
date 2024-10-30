@@ -50,7 +50,7 @@ const sidebarItems = [
 
 const Sidebar = () => {
   const dispatch =useDispatch();
-  const { showSidebar } = useSelector((state) => state.appSlice);
+  const showSidebar  = useSelector((state) => state.appSlice.showSidebar);
 
   return (
     <>
