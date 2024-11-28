@@ -129,13 +129,6 @@ function App() {
   const user = useSelector((state) => state.appSlice.user);
 
   useEffect(() => {
-    // let q;
-    // if(user) {
-    //    q = query(collection(db, "emails"), where("to", "==", user?.email), orderBy("createdAt", "desc"));
-    // }
-    // else {
-    //    q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
-    // }
     const q = query(
       collection(db, "emails"), 
       or(

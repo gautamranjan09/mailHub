@@ -26,7 +26,7 @@ const mailType = [
 ];
 
 const Sent = () => {
-  const emails = useSelector((state) => state.appSlice.emails);
+  //const emails = useSelector((state) => state.appSlice.emails);
   const dispatch = useDispatch();
   const [mailTypeSelected, setMailTypeSelected] = useState("Primary");
 
@@ -66,7 +66,7 @@ const Sent = () => {
             </button>
           ))}
         </div>
-        <Messages emails={emails}/>
+        <Messages />
       </div>
     </div>
   );

@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import nProgress from "nprogress";
 
-const Messages = ({ emails }) => {
+const Messages = () => {
+  const emails = useSelector((state) => state.appSlice.emails);
   const searchText = useSelector((state) => state.appSlice.searchText);
   const user = useSelector((state) =>  state.appSlice.user);
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const [tempEmails, setTempEmails] = useState(null);
   const filterMails = useRef([]);
+  const [newFilteredMails, setNewFilteredMails] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -19,23 +21,25 @@ const Messages = ({ emails }) => {
     else if(selectedMailPath === "sent")
       filterMails.current = emails?.filter(email => email.from === user.email);
 
+    setNewFilteredMails(filterMails.current);
   },[selectedMailPath, emails, user.email]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
       if (searchText && typeof searchText === "object") {
         // When searchText is a suggestion object (from clicking a suggestion)
-        const filteredEmails = filterMails.current?.filter((email) => {
+        const filteredEmails = newFilteredMails?.filter((email) => {
           return email.id === searchText.id;
         });
         setTempEmails(filteredEmails);
       } else if (searchText) {
         // When searchText is a string (from typing in the search box)
-        const filteredEmails = filterMails.current?.filter((email) => {
+        const filteredEmails = newFilteredMails?.filter((email) => {
           const searchLower = searchText.toLowerCase();
           return (
             email?.subject?.toLowerCase().includes(searchLower) ||
             email?.to?.toLowerCase().includes(searchLower) ||
+            email?.from?.toLowerCase().includes(searchLower) ||
             email?.message?.toLowerCase().includes(searchLower) ||
             email?.id?.toLowerCase().includes(searchLower)
           );
@@ -43,15 +47,16 @@ const Messages = ({ emails }) => {
         setTempEmails(filteredEmails);
       } else {
         // When searchText is empty
-        setTempEmails(filterMails.current);
+        setTempEmails(newFilteredMails);
       }
-    }, 1000); // Reduced debounce time from 1000ms to 300ms for better responsiveness
+      nProgress.done();
+    }, 300); // Reduced debounce time from 1000ms to 300ms for better responsiveness
     
     return () => {
       clearTimeout(debounce);
-      nProgress.done();
+      
     };
-  }, [searchText, filterMails.current]);
+  }, [searchText, newFilteredMails]);
 
   return (
     <div>

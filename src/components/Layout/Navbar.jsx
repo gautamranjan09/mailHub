@@ -79,6 +79,7 @@ const Navbar = () => {
             return (
               email?.subject?.toLowerCase().includes(lowerCaseInput) ||
               email?.to?.toLowerCase().includes(lowerCaseInput) ||
+              email?.from?.toLowerCase().includes(lowerCaseInput) ||
               email?.message?.toLowerCase().includes(lowerCaseInput)
             );
           })
@@ -86,6 +87,7 @@ const Navbar = () => {
             id: email.id,
             subject: email.subject,
             to: email.to,
+            from: email.from,
             message: email.message,
             createdAt: email.createdAt,
           }));
