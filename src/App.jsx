@@ -8,7 +8,7 @@ import Body from "./Pages/Body";
 import Inbox from "./Pages/Inbox";
 import Mail from "./Pages/Mail";
 import SendMail from "./components/ComposeMail/SendMail";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, or, orderBy, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { auth, db } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
@@ -129,7 +129,21 @@ function App() {
   const user = useSelector((state) => state.appSlice.user);
 
   useEffect(() => {
-    const q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
+    // let q;
+    // if(user) {
+    //    q = query(collection(db, "emails"), where("to", "==", user?.email), orderBy("createdAt", "desc"));
+    // }
+    // else {
+    //    q = query(collection(db, "emails"), orderBy("createdAt", "desc"));
+    // }
+    const q = query(
+      collection(db, "emails"), 
+      or(
+        where("to", "==", user?.email || ""),
+        where("from", "==", user?.email || "")
+      ),
+      orderBy("createdAt", "desc")
+    );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const allEmails = snapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -151,7 +165,7 @@ function App() {
       unsubscribe();
       NProgress.done(); // Ensure NProgress stops on unmount
     }; // Cleanup on unmount
-  }, []);
+  }, [user]);
 
   // Start NProgress when the app is loading
   useEffect(() => {

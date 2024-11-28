@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
+import nProgress from "nprogress";
 
 const Messages = ({ emails }) => {
   const searchText = useSelector((state) => state.appSlice.searchText);
@@ -12,6 +13,7 @@ const Messages = ({ emails }) => {
   const dispatch = useDispatch();
 
   useEffect(()=>{
+    nProgress.start();
     if(selectedMailPath === "inbox")
       filterMails.current = emails?.filter(email => email.to === user.email);
     else if(selectedMailPath === "sent")
@@ -43,10 +45,11 @@ const Messages = ({ emails }) => {
         // When searchText is empty
         setTempEmails(filterMails.current);
       }
-    }, 300); // Reduced debounce time from 1000ms to 300ms for better responsiveness
-
+    }, 1000); // Reduced debounce time from 1000ms to 300ms for better responsiveness
+    
     return () => {
       clearTimeout(debounce);
+      nProgress.done();
     };
   }, [searchText, filterMails.current]);
 
