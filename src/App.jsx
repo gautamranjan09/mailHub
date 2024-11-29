@@ -27,6 +27,7 @@ import Login from "./Pages/Login";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserProfile from "./Pages/UserProfile";
+import AllMails from "./Pages/AllMails";
 
 
 // Define the routes
@@ -120,6 +121,17 @@ const createRouter = (signedIn) =>
         },
       ],
     },
+    {
+      path: "/allmails",
+      element: <Body />,
+      children: [
+        { path: "/allmails", element: signedIn ? <AllMails /> : <Navigate to="/" /> },
+        {
+          path: "/allmails/:id",
+          element: signedIn ? <Mail /> : <Navigate to="/" />,
+        },
+      ],
+    }
   ]);
 
 function App() {

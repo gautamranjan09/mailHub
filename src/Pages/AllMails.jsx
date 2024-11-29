@@ -9,7 +9,6 @@ import Messages from "../components/Mail/Messages";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMailPath } from "../redux/navSlice";
 
-
 const mailType = [
   {
     icon: <MdInbox size={"20px"} />,
@@ -25,15 +24,14 @@ const mailType = [
   },
 ];
 
-const Sent = () => {
+const AllMails = () => {
   //const emails = useSelector((state) => state.appSlice.emails);
   const dispatch = useDispatch();
   const [mailTypeSelected, setMailTypeSelected] = useState("Primary");
-  
-  useEffect(()=>{
-    dispatch(setSelectedMailPath('sent'));
-  },[]);
 
+  useEffect(() => {
+    dispatch(setSelectedMailPath("allmails"));
+  }, []);
   return (
     <div className="flex-1  bg-white/70 rounded-2xl mx-5">
       <div className="flex items-center justify-between px-4">
@@ -50,15 +48,23 @@ const Sent = () => {
         </div>
         <div className="flex items-center gap-2">
           <p className="text-sm text-gray-500">1-50 of 1000</p>
-          <button className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out"> <MdKeyboardArrowLeft size={'24px'} /></button>
-          <button className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out"> <MdKeyboardArrowRight size={'24px'} /></button>
+          <button className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
+            {" "}
+            <MdKeyboardArrowLeft size={"24px"} />
+          </button>
+          <button className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
+            {" "}
+            <MdKeyboardArrowRight size={"24px"} />
+          </button>
         </div>
       </div>
       <div className="h-[78vh] overflow-y-auto">
         <div className="flex items-center gap-1">
           {mailType.map((item, index) => (
             <button
-              className={`${mailTypeSelected === item.text ? 'border-b-4 border-b-blue-600 text-blue-600' : ''} flex items-center gap-5 p-4 w-52 hover:bg-teal-200/30 transition-all duration-1000 ease-in-out`}
+              className={`${
+                mailTypeSelected === item.text ? "border-b-4 border-b-blue-600 text-blue-600" : ""
+              } flex items-center gap-5 p-4 w-52 hover:bg-teal-200/30 transition-all duration-1000 ease-in-out`}
               key={item.text}
               onClick={() => setMailTypeSelected(item.text)}
             >
@@ -72,4 +78,4 @@ const Sent = () => {
   );
 };
 
-export default Sent;
+export default AllMails;

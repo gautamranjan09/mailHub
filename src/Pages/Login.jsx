@@ -28,7 +28,6 @@ const Login = () => {
       const unsubscribe = onSnapshot(
         doc(db, loggedInUser.email, loggedInUser.email),
         (doc) => {
-          console.log(doc.data());
           dispatch(setProfile(doc.data()));
         },
         (error) => {
@@ -75,7 +74,6 @@ const Login = () => {
           dispatch(setUser(loggedInUser));
           dispatch(setProfile(loggedInUser));
           createDoc(loggedInUser, loggedInUser.email);
-          // console.log(user, loggedInUser);
         } catch (error) {
           const errorCode = error.code;
           const errorMessage = error.message;

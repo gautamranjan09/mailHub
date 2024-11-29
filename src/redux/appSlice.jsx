@@ -2,15 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const appSlice = createSlice({
   name: "appSlice",
-  initialState: {
-    open: false,
-    emails: [],
-    searchText: "",
-    showSidebar: true,
-    signedUp:false,
-    user: null,
-    profile: null,
-  },
+  initialState: { open: false, emails: [], searchText: "", showSidebar: true, signedUp: false, user: null, profile: null },
   reducers: {
     //actions
     setOpen: (state, action) => {
@@ -20,7 +12,7 @@ const appSlice = createSlice({
       state.emails = action.payload;
     },
     setSearchText: (state, action) => {
-        state.searchText = action.payload;
+      state.searchText = action.payload;
     },
     setShowSidebar: (state, action) => {
       state.showSidebar = !state.showSidebar;
@@ -38,6 +30,5 @@ const appSlice = createSlice({
 });
 
 export const { setOpen, setEmails, setSearchText, setShowSidebar, setUser, setSignedIn, setProfile } = appSlice.actions;
-
 
 export default appSlice.reducer;

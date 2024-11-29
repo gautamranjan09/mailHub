@@ -6,7 +6,7 @@ import { MdOutlineDrafts, MdOutlineKeyboardArrowDown, MdOutlineWatchLater } from
 import { TbSend2 } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "../../redux/appSlice";
-import { BsTrash } from "react-icons/bs";
+import { BsMailbox2, BsTrash } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 
 const sidebarItems = [
@@ -40,6 +40,11 @@ const sidebarItems = [
     icon: <BsTrash size={"20px"} />,
     text: "Trash",
     to: "/trash"
+  },
+  {
+    icon: <BsMailbox2 size={"20px"} />,
+    text: "All Mails",
+    to: "/allmails"
   },
   {
     icon: <MdOutlineKeyboardArrowDown size={"20px"} />,

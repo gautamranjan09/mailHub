@@ -3,6 +3,7 @@ import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import nProgress from "nprogress";
+import { useNavigate } from "react-router-dom";
 
 const Messages = () => {
   const emails = useSelector((state) => state.appSlice.emails);
@@ -12,6 +13,7 @@ const Messages = () => {
   const [tempEmails, setTempEmails] = useState(null);
   const filterMails = useRef([]);
   const [newFilteredMails, setNewFilteredMails] = useState([]);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -20,6 +22,8 @@ const Messages = () => {
       filterMails.current = emails?.filter(email => email.to === user.email);
     else if(selectedMailPath === "sent")
       filterMails.current = emails?.filter(email => email.from === user.email);
+    else if(selectedMailPath === "allmails")
+      filterMails.current = emails;
 
     setNewFilteredMails(filterMails.current);
   },[selectedMailPath, emails, user.email]);
@@ -32,6 +36,7 @@ const Messages = () => {
           return email.id === searchText.id;
         });
         setTempEmails(filteredEmails);
+       
       } else if (searchText) {
         // When searchText is a string (from typing in the search box)
         const filteredEmails = newFilteredMails?.filter((email) => {
@@ -44,6 +49,9 @@ const Messages = () => {
             email?.id?.toLowerCase().includes(searchLower)
           );
         });
+        //navigate("/allmails");
+        console.log("hffghh");
+        
         setTempEmails(filteredEmails);
       } else {
         // When searchText is empty
