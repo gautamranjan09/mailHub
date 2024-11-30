@@ -4,6 +4,7 @@ import { IoMdMore, IoMdRefresh } from "react-icons/io";
 import { MdInbox, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { GoTag } from "react-icons/go";
 import { FaUserFriends } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const mailType = [
   {
@@ -19,8 +20,19 @@ const mailType = [
     text: "Social",
   },
 ];
-const UiEmailTypeBody = () => {
+const UiEmailTypeBody = ({ setNoOfMailOnCurrPage, noOfMailOnCurrPage }) => {
   const [mailTypeSelected, setMailTypeSelected] = useState("Primary");
+  const totalNumOfMails = useSelector((state) => state.navSlice.totalNumOfMails);
+
+  const nextPage = () => {
+    if (totalNumOfMails - noOfMailOnCurrPage > 20) setNoOfMailOnCurrPage((prevNoOfMailOnCurrPage) => prevNoOfMailOnCurrPage + 20);
+  };
+
+  const prevPage = () => {
+    if (noOfMailOnCurrPage > 0) setNoOfMailOnCurrPage((prevNoOfMailOnCurrPage) => prevNoOfMailOnCurrPage - 20);
+  };
+  console.log(totalNumOfMails, noOfMailOnCurrPage);
+
   return (
     <>
       {" "}
@@ -37,12 +49,12 @@ const UiEmailTypeBody = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <p className="text-sm text-gray-500">1-50 of 1000</p>
-          <button className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
+          <p className="text-sm text-gray-500">{`${totalNumOfMails && noOfMailOnCurrPage + 1} - ${noOfMailOnCurrPage + 20 > totalNumOfMails ? totalNumOfMails : noOfMailOnCurrPage + 20} of ${totalNumOfMails}`}</p>
+          <button onClick={prevPage} className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
             {" "}
             <MdKeyboardArrowLeft size={"24px"} />
           </button>
-          <button className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
+          <button onClick={nextPage} className="rounded-full p-1 hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
             {" "}
             <MdKeyboardArrowRight size={"24px"} />
           </button>
