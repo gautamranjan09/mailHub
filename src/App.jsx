@@ -184,7 +184,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-      {loading ? <LoadingSpinner /> : <RouterProvider router={router} />}
+      {loading ? <div className="fixed top-20 left-[39rem]"><LoadingSpinner /> </div>: <RouterProvider router={router} />}
       <div className="fixed w-[36%] bottom-0 right-10 z-10">
         <SendMail />
       </div>
