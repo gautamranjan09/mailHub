@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import nProgress from "nprogress";
 import { useNavigate } from "react-router-dom";
+import { setMailCount } from "../../redux/navSlice";
 
 const Messages = () => {
   const emails = useSelector((state) => state.appSlice.emails);
   const searchText = useSelector((state) => state.appSlice.searchText);
   const user = useSelector((state) =>  state.appSlice.user);
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
-  const [tempEmails, setTempEmails] = useState(null);
+  const [tempEmails, setTempEmails] = useState([]);
   const filterMails = useRef([]);
   const [newFilteredMails, setNewFilteredMails] = useState([]);
   const navigate = useNavigate();
@@ -27,6 +28,11 @@ const Messages = () => {
 
     setNewFilteredMails(filterMails.current);
   },[selectedMailPath, emails, user.email]);
+
+  useMemo(()=>{
+    if(tempEmails.length !==0 && selectedMailPath === "inbox") 
+    dispatch(setMailCount(tempEmails.length));
+  },[tempEmails]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -59,7 +65,6 @@ const Messages = () => {
       }
       nProgress.done();
     }, 300); // Reduced debounce time from 1000ms to 300ms for better responsiveness
-    
     return () => {
       clearTimeout(debounce);
       
