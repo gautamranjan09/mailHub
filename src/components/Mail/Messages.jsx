@@ -73,7 +73,7 @@ const Messages = ({ noOfMailOnCurrPage }) => {
         <div className="fixed top-20 left-1/2">
           <LoadingSpinner />
         </div>
-      )}
+      )} 
       {tempEmails && tempEmails.length > noOfMailOnCurrPage + 20
         ? tempEmails.slice(noOfMailOnCurrPage, noOfMailOnCurrPage + 20)?.map((email, index) => <Message key={email.id} email={email} index={index} />)
         : tempEmails.slice(noOfMailOnCurrPage)?.map((email, index) => <Message key={email.id} email={email} index={index} />)}
