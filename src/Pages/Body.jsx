@@ -17,7 +17,7 @@ const Body = () => {
         <div className="flex">
           {/* Adjust the width and overflow */}
           <div
-            className={`transition-all duration-1000 ease-in-out ${
+            className={`transition-all duration-[500ms] ease-in-out ${
               showSidebar ? "w-[13%]" : "w-0 overflow-hidden"
             }`}
           >

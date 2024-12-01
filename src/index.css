@@ -142,6 +142,8 @@
     transform: translateX(0);
   }
 }
+
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -153,6 +155,42 @@
   }
 }
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+}
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 /* Add these custom animation classes */
 @layer utilities {
   .animate-fadeIn {
@@ -165,4 +203,14 @@
   .animate-slideUp {
     animation: slideUp 0.4s ease-out forwards;
   }
+  .animate-slideDown {
+    animation: slideDown 0.4s ease-out forwards;
+  }
+  .animate-slideOut {
+    animation: slideOut 0.8s ease-out forwards;
+  }
+  .animate-bounceIn {
+    animation: bounceIn 1s ease-out forwards;
+  }
+  
 }
