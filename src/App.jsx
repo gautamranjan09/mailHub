@@ -12,7 +12,7 @@ import { collection, doc, onSnapshot, or, orderBy, query, where } from "firebase
 import { useEffect, useState } from "react";
 import { auth, db } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmails, setUser } from "./redux/appSlice";
+import { setEmails, setProfile, setUser } from "./redux/appSlice";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import LoadingSpinner from "./components/UI/LoadingSpinner";
