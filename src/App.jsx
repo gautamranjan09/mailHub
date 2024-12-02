@@ -8,7 +8,7 @@ import Body from "./Pages/Body";
 import Inbox from "./Pages/Inbox";
 import Mail from "./Pages/Mail";
 import SendMail from "./components/ComposeMail/SendMail";
-import { collection, onSnapshot, or, orderBy, query, where } from "firebase/firestore";
+import { collection, doc, onSnapshot, or, orderBy, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { auth, db } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
@@ -178,6 +178,20 @@ function App() {
       NProgress.start();
     }
   }, [loading]);
+
+  useEffect(() => {
+    const email = user?.email ? user?.email : "abc";
+    const unsubscribe = onSnapshot(
+      doc(db, email, email),
+      (doc) => {
+        // console.log(doc.data());
+        dispatch(setProfile(doc.data()));
+      },
+      (error) => {
+        console.error("Error fetching document:", error);
+      }
+    );
+  }, [user])
 
   const router = createRouter(user);
 

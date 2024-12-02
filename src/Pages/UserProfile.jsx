@@ -45,7 +45,7 @@ const UserProfile = () => {
       await sendEmailVerification(auth.currentUser);
       const updatedUser = useCurrentUser(auth.currentUser);
       dispatch(setUser(updatedUser));
-      dispatch(setProfile(updatedUser));
+      //dispatch(setProfile(updatedUser));
       toast.success(`Verification email sent to ${profile.email}! Please check your inbox`);
     }catch(error){
       toast.error(error.message);
@@ -76,7 +76,7 @@ const UserProfile = () => {
         photoURL: formData?.photoURL,
       });
       dispatch(setUser(updatedUser));
-      dispatch(setProfile(updatedUser));
+      //dispatch(setProfile(updatedUser));
       toast.success("Profile updated successfully!");
     }catch(error){
       toast.error(error.message);

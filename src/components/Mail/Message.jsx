@@ -5,22 +5,35 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useStripHTML } from "../hooks/useStripHTML";
 import { IoMdCheckboxOutline } from "react-icons/io";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
+import { db } from "../../firebase";
 
 const Message = ({ email, index }) => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const navigate = useNavigate();
 
   const [selectSquare, setSelectSquare] = useState(false); // for selecting a particular box
-  const [selectStarred, setSelectStarred] = useState(false); // for selecting starred box
 
   const handleSelectedEmail = (event) => {
     event.stopPropagation();
     setSelectSquare(!selectSquare);
   };
 
-  const handleSelectedStarredEmail = (event) => {
+  const handleSelectedStarredEmail = async (event) => {
     event.stopPropagation();
-    setSelectStarred(!selectStarred);
+    const starredStatus = email?.starred ? false : true;
+    try{
+     const updatedEmail= await updateDoc(doc(db, "emails", email.id),{
+        starred: starredStatus
+      })
+      //setSelectStarred(!selectStarred);
+      console.log(email, updatedEmail);
+      
+      toast.success("asdf")
+    }catch(error){
+      toast.error(error.message);
+    } 
   };
 
   const openMail = () => {
@@ -39,7 +52,7 @@ const Message = ({ email, index }) => {
           {/* {improve} */}
         </div>
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedStarredEmail}>
-          {selectStarred ? <RiStarSFill className="w-5 h-5 text-teal-400" /> : <RiStarLine className="w-5 h-5" />}
+          {email?.starred ? <RiStarSFill className="w-5 h-5 text-teal-400" /> : <RiStarLine className="w-5 h-5" />}
         </div>
       </div>
       <div className="flex-1 ml-4 flex items-center">

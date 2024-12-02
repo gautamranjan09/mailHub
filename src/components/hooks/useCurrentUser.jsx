@@ -1,13 +1,11 @@
-
-export function useCurrentUser(user) {
-    
+export function useCurrentUser(user, docData = {}) {
   const createdAtTimeStamp = Number(user.metadata.createdAt);
   const lastLoginAtTimeStamp = Number(user.metadata.lastLoginAt);
   const loggedInUser = {
     displayName: user.displayName,
     email: user.email,
     emailVerified: user.emailVerified,
-    phoneNumber: user.phoneNumber,
+    phoneNumber: docData?.phoneNumber ? docData?.phoneNumber : null,
     photoURL: user.photoURL,
     token: user.accessToken,
     id: user.uid,
