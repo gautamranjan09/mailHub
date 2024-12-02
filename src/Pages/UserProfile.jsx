@@ -24,6 +24,7 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 const UserProfile = () => {
   const user = useSelector((state) => state.appSlice.user);
   const profile = useSelector((state) => state.appSlice.profile);
+  const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -77,6 +78,7 @@ const UserProfile = () => {
       });
       dispatch(setUser(updatedUser));
       //dispatch(setProfile(updatedUser));
+      setIsEditing({displayName: !!!formData?.displayName, phoneNumber: !!!formData?.phoneNumber, photoURL: !!!formData?.photoURL});
       toast.success("Profile updated successfully!");
     }catch(error){
       toast.error(error.message);
@@ -115,7 +117,7 @@ const UserProfile = () => {
 
           {profile ? (
             <div className="relative text-center p-3">
-             <div onClick={()=> navigate("/inbox")} className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-500"> <IoMdArrowBack size={"20px"}  /></div>
+             <div onClick={()=> navigate(`/${selectedMailPath}`)} className="absolute p-3 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-500"> <IoMdArrowBack size={"20px"}  /></div>
               <h2 className="text-3xl font-bold text-gray-800">
                 User Profile
               </h2>

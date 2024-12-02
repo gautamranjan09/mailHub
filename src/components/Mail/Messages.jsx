@@ -22,6 +22,7 @@ const Messages = ({ noOfMailOnCurrPage }) => {
     if (selectedMailPath === "inbox") filterMails.current = emails?.filter((email) => email.to === user.email);
     else if (selectedMailPath === "sent") filterMails.current = emails?.filter((email) => email.from === user.email);
     else if (selectedMailPath === "allmails") filterMails.current = emails;
+    else if (selectedMailPath === "starred") filterMails.current = emails?.filter((email) => email.starred);
 
     setNewFilteredMails(filterMails.current);
   }, [selectedMailPath, emails, user.email]);

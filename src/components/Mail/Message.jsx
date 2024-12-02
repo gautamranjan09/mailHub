@@ -27,10 +27,7 @@ const Message = ({ email, index }) => {
      const updatedEmail= await updateDoc(doc(db, "emails", email.id),{
         starred: starredStatus
       })
-      //setSelectStarred(!selectStarred);
-      console.log(email, updatedEmail);
-      
-      toast.success("asdf")
+
     }catch(error){
       toast.error(error.message);
     } 
