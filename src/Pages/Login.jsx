@@ -22,14 +22,18 @@ const Login = () => {
     const user = auth.currentUser;
 
     if (user) {
-      const loggedInUser = useCurrentUser(user);
+      let loggedInUser = useCurrentUser(user);
       dispatch(setUser(loggedInUser));
 
       const userDataUpdate = async() => {
+        const docsnap = await getDoc(doc(db, user.email, user.email));
+        const docdata = docsnap.exists() ? docsnap.data() : {};
+        loggedInUser = useCurrentUser(user, docdata);
+ 
         await setDoc(doc(db, loggedInUser.email, loggedInUser.email), { ...loggedInUser });
       }
       userDataUpdate();
-      
+
       toast.success("Welcome back to Mail hub! You are already logged in.");
     }
   }, []);
