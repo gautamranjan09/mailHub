@@ -1,23 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdCropSquare } from "react-icons/md";
 import { RiStarLine, RiStarSFill } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useStripHTML } from "../hooks/useStripHTML";
 import { IoMdCheckboxOutline } from "react-icons/io";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { db } from "../../firebase";
+import { setSelectedEmailsArray } from "../../redux/appSlice";
 
 const Message = ({ email, index }) => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
+  const selectedEmailsArray = useSelector((state) => state.appSlice.selectedEmailsArray);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [selectSquare, setSelectSquare] = useState(false); // for selecting a particular box
 
+ useEffect(()=>{
+  if(selectedEmailsArray.includes(email)){
+    setSelectSquare(true);
+  } else{
+    setSelectSquare(false);
+  }
+ },[selectedEmailsArray])
+
   const handleSelectedEmail = (event) => {
     event.stopPropagation();
-    setSelectSquare(!selectSquare);
+    //setSelectSquare(!selectSquare);
+    if(selectSquare === true){
+      setSelectSquare(false);
+      const updatedArray = selectedEmailsArray.filter((currentEmail) => currentEmail.id !== email.id);
+      dispatch(setSelectedEmailsArray(updatedArray));
+    }else{
+      setSelectSquare(true);
+      dispatch(setSelectedEmailsArray([...selectedEmailsArray, email]));
+    }
   };
 
   const handleSelectedStarredEmail = async (event) => {

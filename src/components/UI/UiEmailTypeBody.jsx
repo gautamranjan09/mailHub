@@ -3,8 +3,12 @@ import DropdownMenu from "./DropdownMenu";
 import { IoMdMore, IoMdRefresh } from "react-icons/io";
 import { MdInbox, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { GoTag } from "react-icons/go";
-import { FaUserFriends } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { FaTrash, FaUserFriends } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import { setSelectedEmailsArray } from "../../redux/appSlice";
 
 const mailType = [
   {
@@ -22,7 +26,9 @@ const mailType = [
 ];
 const UiEmailTypeBody = ({ setNoOfMailOnCurrPage, noOfMailOnCurrPage }) => {
   const [mailTypeSelected, setMailTypeSelected] = useState("Primary");
+  const selectedEmailsArray = useSelector((state) => state.appSlice.selectedEmailsArray);
   const totalNumOfMails = useSelector((state) => state.navSlice.totalNumOfMails);
+  const dispatch = useDispatch();
 
   const nextPage = () => {
     if (totalNumOfMails - noOfMailOnCurrPage > 20) setNoOfMailOnCurrPage((prevNoOfMailOnCurrPage) => prevNoOfMailOnCurrPage + 20);
@@ -31,7 +37,27 @@ const UiEmailTypeBody = ({ setNoOfMailOnCurrPage, noOfMailOnCurrPage }) => {
   const prevPage = () => {
     if (noOfMailOnCurrPage > 0) setNoOfMailOnCurrPage((prevNoOfMailOnCurrPage) => prevNoOfMailOnCurrPage - 20);
   };
-  console.log(totalNumOfMails, noOfMailOnCurrPage);
+
+  const handleTrashEmail = async() => {
+    // handle trash email logic here
+    
+    const updatedEmailPromise=  selectedEmailsArray.map((email)=>{
+      const trashStatus = email?.trashed ? false : true;
+      try{
+        const deletePromise = updateDoc(doc(db, "emails", email.id),{
+           trashed: trashStatus
+         })
+         return deletePromise;
+       }catch(error){
+         toast.error(error.message);
+       } 
+    });
+
+    // Wait for all actions to complete
+    await Promise.all(updatedEmailPromise);
+    dispatch(setSelectedEmailsArray([]));
+    toast.success( "Email successfully moved to trash!");
+  }
 
   return (
     <>
@@ -44,6 +70,9 @@ const UiEmailTypeBody = ({ setNoOfMailOnCurrPage, noOfMailOnCurrPage }) => {
           <div className="p-2 rounded-full hover:bg-teal-200/30 transition-all duration-500 ease-in-out hover:rotate-12">
             <IoMdRefresh size={"20px"} />
           </div>
+          {selectedEmailsArray.length > 0 && <div onClick={handleTrashEmail} className="p-2 rounded-full hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
+            <FaTrash size={"16px"} />
+          </div>}
           <div className="p-2 rounded-full hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
             <IoMdMore size={"20px"} />
           </div>

@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import nProgress from "nprogress";
 import { useNavigate } from "react-router-dom";
-import { setMailCount, setTotalNumOfMails } from "../../redux/navSlice";
+import { setMailCount, setTotalMailsInPath, setTotalNumOfMails } from "../../redux/navSlice";
+import { setSelectedEmailsArray } from "../../redux/appSlice";
 
 const Messages = ({ noOfMailOnCurrPage }) => {
   const emails = useSelector((state) => state.appSlice.emails);
@@ -19,19 +20,21 @@ const Messages = ({ noOfMailOnCurrPage }) => {
 
   useEffect(() => {
     nProgress.start();
-    if (selectedMailPath === "inbox") filterMails.current = emails?.filter((email) => email.to === user.email);
-    else if (selectedMailPath === "sent") filterMails.current = emails?.filter((email) => email.from === user.email);
+    if (selectedMailPath === "inbox") filterMails.current = emails?.filter((email) => email.to === user.email && !email.trashed);
+    else if (selectedMailPath === "sent") filterMails.current = emails?.filter((email) => email.from === user.email && !email.trashed);
     else if (selectedMailPath === "allmails") filterMails.current = emails;
-    else if (selectedMailPath === "starred") filterMails.current = emails?.filter((email) => email.starred);
+    else if (selectedMailPath === "starred") filterMails.current = emails?.filter((email) => email.starred && !email.trashed);
+    else if (selectedMailPath === "trash") filterMails.current = emails?.filter(( email) => email.trashed);
 
     setNewFilteredMails(filterMails.current);
   }, [selectedMailPath, emails, user.email]);
 
   useMemo(() => {
-    if (tempEmails.length !==0 && selectedMailPath === "inbox")  dispatch(setMailCount(tempEmails.length));
+    if (tempEmails.length !==0 && selectedMailPath === "inbox")  dispatch(setMailCount(tempEmails.length)); // to show how many mails in inbox
 
     dispatch(setTotalNumOfMails(tempEmails.length)); // this is to tell how many emails are in every path(sidebar link)
-  }, [tempEmails]);
+    dispatch(setTotalMailsInPath(tempEmails));
+  }, [tempEmails, selectedMailPath]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -67,6 +70,10 @@ const Messages = ({ noOfMailOnCurrPage }) => {
       clearTimeout(debounce);
     };
   }, [searchText, newFilteredMails]);
+
+  useEffect(()=>{
+    dispatch(setSelectedEmailsArray([])); // to clear selected msg when path changes
+  },[selectedMailPath])
 
   return (
     <div>

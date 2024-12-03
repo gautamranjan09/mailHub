@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BiCheckbox, BiCheckboxChecked } from "react-icons/bi";
 import { FaCaretDown } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { setSelectedEmailsArray } from "../../redux/appSlice";
 
 const DropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const totalMailsInPath = useSelector(state => state.navSlice.totalMailsInPath);
+  const dispatch = useDispatch();
   const [isCheckboxClicked, setIsCheckboxClicked] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const dropdownRef = useRef(null);
@@ -31,6 +36,25 @@ const DropdownMenu = () => {
     setSelectedOption(option);
     setIsOpen(false);
     setIsActive(false); // Reset background color when selecting an option
+
+    if (option === "All") dispatch(setSelectedEmailsArray([...totalMailsInPath]));
+    else if (option === "None") dispatch(setSelectedEmailsArray([]));
+    else if (option === "Starred"){
+      const starredMails = totalMailsInPath.filter(mail => mail.starred);
+      dispatch(setSelectedEmailsArray(starredMails));
+    } 
+    else if (option === "Unstarred"){
+      const unstarredMails = totalMailsInPath.filter(mail => !mail.starred);
+      dispatch(setSelectedEmailsArray(unstarredMails));
+    }
+    else if (option === "Read"){
+      const readMails = totalMailsInPath.filter(mail => mail?.read);
+      dispatch(setSelectedEmailsArray(readMails));
+    }
+    else if (option === "Unread"){
+      const unreadMails = totalMailsInPath.filter(mail => !mail?.read);
+      dispatch(setSelectedEmailsArray(unreadMails));
+    }
   };
 
   const  handleCheckboxClick = () => {
