@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Navbar from "./components/Layout/Navbar";
 import Body from "./Pages/Body";
 import Inbox from "./Pages/Inbox";
@@ -28,7 +24,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserProfile from "./Pages/UserProfile";
 import AllMails from "./Pages/AllMails";
-
 
 // Define the routes
 const createRouter = (signedIn) =>
@@ -131,7 +126,7 @@ const createRouter = (signedIn) =>
           element: signedIn ? <Mail /> : <Navigate to="/" />,
         },
       ],
-    }
+    },
   ]);
 
 function App() {
@@ -142,23 +137,16 @@ function App() {
 
   useEffect(() => {
     const q = query(
-      collection(db, "emails"), 
-      or(
-        where("to", "==", user?.email || ""),
-        where("from", "==", user?.email || "")
-      ),
+      collection(db, "emails"),
+
+      where("emailID", "==", user?.email || ""),
       orderBy("createdAt", "desc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const allEmails = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-        createdAt: doc.data().createdAt
-          ? doc
-              .data()
-              .createdAt.toDate()
-              .toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-          : null,
+        createdAt: doc.data().createdAt ? doc.data().createdAt.toDate().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : null,
       }));
 
       dispatch(setEmails(allEmails));
@@ -191,14 +179,20 @@ function App() {
         console.error("Error fetching document:", error);
       }
     );
-  }, [user])
+  }, [user]);
 
   const router = createRouter(user);
 
   return (
     <>
       <ToastContainer />
-      {loading ? <div className="fixed top-20 left-[45%]"><LoadingSpinner /> </div>: <RouterProvider router={router} />}
+      {loading ? (
+        <div className="fixed top-20 left-[45%]">
+          <LoadingSpinner />{" "}
+        </div>
+      ) : (
+        <RouterProvider router={router} />
+      )}
       <div className="fixed w-[36%] bottom-0 right-10 z-10">
         <SendMail />
       </div>

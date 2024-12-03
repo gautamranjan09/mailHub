@@ -21,6 +21,19 @@ const ComposeMail = () => {
       from:user?.email,
       subject: subject,
       message:editorContent,
+      emailID:user?.email,
+      read:false,
+      // plainMessage: stripHtml(editorContent),
+      createdAt: serverTimestamp(),
+    })
+
+    await addDoc(collection(db, "emails"),{
+      to: to,
+      from:user?.email,
+      subject: subject,
+      message:editorContent,
+      emailID:to,
+      read:false,
       // plainMessage: stripHtml(editorContent),
       createdAt: serverTimestamp(),
     })

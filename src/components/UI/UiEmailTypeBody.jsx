@@ -139,17 +139,17 @@ const UiEmailTypeBody = ({ setNoOfMailOnCurrPage, noOfMailOnCurrPage }) => {
             <IoMdRefresh size={"20px"} />
           </div>
           {selectedEmailsArray.length > 0 && selectedMailPath !== "trash" && (
-            <div onClick={handleTrashEmail} className="p-2 rounded-full hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
+            <div onClick={handleTrashEmail} className="p-2 cursor-pointer rounded-full hover:bg-teal-200/30 transition-all duration-500 ease-in-out">
               <FaTrash size={"16px"} />
             </div>
           )}
           {selectedEmailsArray.length > 0 && selectedMailPath === "trash" && (
-            <div onClick={handleRestoreEmail} className="p-1 rounded-md hover:text-teal-700 hover:font-semibold hover:bg-teal-200/30 transition-all duration-500 ease-in-out text-black">
+            <div onClick={handleRestoreEmail} className="p-1 cursor-pointer rounded-md hover:text-teal-700 hover:font-semibold hover:bg-teal-200/30 transition-all duration-500 ease-in-out text-black">
               <div>Restore</div>
             </div>
           )}
           {selectedEmailsArray.length > 0 && selectedMailPath === "trash" && (
-            <div onClick={handleDeleteEmail} className="p-1 rounded-md hover:text-rose-700 hover:font-semibold hover:bg-rose-200/30 transition-all duration-500 ease-in-out text-black">
+            <div onClick={handleDeleteEmail} className="p-1 cursor-pointer rounded-md hover:text-rose-700 hover:font-semibold hover:bg-rose-200/30 transition-all duration-500 ease-in-out text-black">
               <div>Delete forever</div>
             </div>
           )}
