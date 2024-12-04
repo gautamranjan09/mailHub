@@ -1,4 +1,4 @@
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { BiArchiveIn } from "react-icons/bi";
 import { IoMdArrowBack, IoMdMore } from "react-icons/io";
@@ -13,8 +13,9 @@ import {
   MdOutlineWatchLater,
 } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
+import { toast } from "react-toastify";
 
 const Mail = () => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
@@ -29,23 +30,22 @@ const Mail = () => {
   const deteteMailById = async (id) => {
     try {
       await deleteDoc(doc(db, "emails", id));
-      navigate(`/${selectedMailPath}`);
+      // navigate(`/${selectedMailPath}`);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const iconsButton = [
-    { icon: <IoMdArrowBack size={"20px"} />, function: () => navigate(`/${selectedMailPath}`) },
-    { icon: <BiArchiveIn size={"20px"} /> },
-    { icon: <MdOutlineReport size={"20px"} /> },
-    { icon: <MdDeleteOutline size={"20px"} />, function: () => deteteMailById(id) },
-    { icon: <MdOutlineMarkEmailUnread size={"20px"} /> },
-    { icon: <MdOutlineWatchLater size={"20px"} /> },
-    { icon: <MdOutlineAddTask size={"20px"} /> },
-    { icon: <MdOutlineDriveFileMove size={"20px"} /> },
-    { icon: <IoMdMore size={"20px"} /> },
-  ];
+  const handleMarkUnread = async () => {
+    navigate(`/${selectedMailPath}`);
+    try {
+      await updateDoc(doc(db, "emails", id), {
+        read: false,
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
     if (!selectedEmail) {
@@ -59,6 +59,18 @@ const Mail = () => {
     // navigate("/inbox");
     return null; // Prevent rendering the rest of the component
   }
+
+  const iconsButton = [
+    { icon: <IoMdArrowBack size={"20px"} />, function: () => navigate(`/${selectedMailPath}`) },
+    { icon: <BiArchiveIn size={"20px"} /> },
+    { icon: <MdOutlineReport size={"20px"} /> },
+    { icon: <MdDeleteOutline size={"20px"} />, function: () => deteteMailById(id) },
+    { icon: <MdOutlineMarkEmailUnread size={"20px"} />, function: handleMarkUnread },
+    { icon: <MdOutlineWatchLater size={"20px"} /> },
+    { icon: <MdOutlineAddTask size={"20px"} /> },
+    { icon: <MdOutlineDriveFileMove size={"20px"} /> },
+    { icon: <IoMdMore size={"20px"} /> },
+  ];
 
   return (
     <div className="flex-1 bg-white/70 rounded-2xl mx-5">
