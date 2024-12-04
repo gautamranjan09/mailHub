@@ -2,26 +2,19 @@ import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { BiArchiveIn } from "react-icons/bi";
 import { IoMdArrowBack, IoMdMore } from "react-icons/io";
-import {
-  MdDeleteOutline,
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdOutlineAddTask,
-  MdOutlineDriveFileMove,
-  MdOutlineMarkEmailUnread,
-  MdOutlineReport,
-  MdOutlineWatchLater,
-} from "react-icons/md";
+import { MdDeleteOutline, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineAddTask, MdOutlineDriveFileMove, MdOutlineMarkEmailUnread, MdOutlineReport, MdOutlineWatchLater } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
+import { Tooltip } from "react-tooltip";
 
 const Mail = () => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
   const navigate = useNavigate();
   const { id } = useParams();
   const emails = useSelector((state) => state.appSlice.emails);
+  const totalMailsInPath = useSelector((state) => state.navSlice.totalMailsInPath);
   const user = useSelector((state) => state.appSlice.user);
 
   // Find the product based on the productId
@@ -47,6 +40,38 @@ const Mail = () => {
     }
   };
 
+  const nextMail = async () => {
+    const index = totalMailsInPath.findIndex((email) => email.id === selectedEmail.id);
+    if (index + 1 < totalMailsInPath.length) {
+      navigate(`/${selectedMailPath}/${totalMailsInPath[index + 1].id}`);
+      if (totalMailsInPath[index + 1].read === false) {
+        try {
+          await updateDoc(doc(db, "emails", totalMailsInPath[index + 1].id), {
+            read: true,
+          });
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    }
+  };
+
+  const prevMail = async () => {
+    const index = totalMailsInPath.findIndex((email) => email.id === selectedEmail.id);
+    if (index - 1 >= 0) {
+      navigate(`/${selectedMailPath}/${totalMailsInPath[index - 1].id}`);
+      if (totalMailsInPath[index - 1].read === false) {
+        try {
+          await updateDoc(doc(db, "emails", totalMailsInPath[index - 1].id), {
+            read: true,
+          });
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (!selectedEmail) {
       // If the selected email does not exist, navigate to inbox
@@ -62,14 +87,14 @@ const Mail = () => {
 
   const iconsButton = [
     { icon: <IoMdArrowBack size={"20px"} />, function: () => navigate(`/${selectedMailPath}`) },
-    { icon: <BiArchiveIn size={"20px"} /> },
-    { icon: <MdOutlineReport size={"20px"} /> },
-    { icon: <MdDeleteOutline size={"20px"} />, function: () => deteteMailById(id) },
-    { icon: <MdOutlineMarkEmailUnread size={"20px"} />, function: handleMarkUnread },
-    { icon: <MdOutlineWatchLater size={"20px"} /> },
-    { icon: <MdOutlineAddTask size={"20px"} /> },
-    { icon: <MdOutlineDriveFileMove size={"20px"} /> },
-    { icon: <IoMdMore size={"20px"} /> },
+    { icon: <BiArchiveIn id="archive" size={"20px"} />, id: "#archive", content: "Not Clickable" },
+    { icon: <MdOutlineReport size={"20px"} id="report" />, id: "#report", content: "Not Clickable" },
+    { icon: <MdDeleteOutline size={"20px"} id="delete" />, function: () => deteteMailById(id), content: "Delete for Me", id: "#delete" },
+    { icon: <MdOutlineMarkEmailUnread size={"20px"} id="mark-unread" />, function: handleMarkUnread, content: "Mark Unread", id: "#mark-unread" },
+    { icon: <MdOutlineWatchLater size={"20px"} id="snooze" />, content: "Snoozed", id: "#snooze" },
+    { icon: <MdOutlineAddTask size={"20px"} id="add-task" />, content: "Not Clickable", id: "#add-task" },
+    { icon: <MdOutlineDriveFileMove size={"20px"} id="draft" />, content: "Draft", id: "#draft" },
+    { icon: <IoMdMore size={"20px"} id="more" />, content: "Not Clickable", id: "#more" },
   ];
 
   return (
@@ -83,16 +108,17 @@ const Mail = () => {
               style={{ "--delay": `${index * 300}ms` }}
               className="p-2 rounded-full hover:bg-teal-300/30 cursor-pointer transition-all duration-1000 ease-in-out animate-slideIn opacity-0 [animation-delay:var(--delay)]"
             >
+              <Tooltip anchorSelect={item.id} content={item.content} place="top" className="backdrop-blur-3xl" border="1px solid red" float={true} opacity={0.5} />
               {item.icon}
             </div>
           ))}
         </div>
         <div className="flex items-center gap-2 animate-slideIn">
-          <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out">
+          <button onClick={prevMail} className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out">
             {" "}
             <MdKeyboardArrowLeft size={"24px"} />
           </button>
-          <button className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out">
+          <button onClick={nextMail} className="rounded-full p-1 hover:bg-teal-300/30 transition-all duration-1000 ease-in-out">
             {" "}
             <MdKeyboardArrowRight size={"24px"} />
           </button>
@@ -102,9 +128,7 @@ const Mail = () => {
         <div className="flex items-center justify-between bg-transparent gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-medium">{selectedEmail?.subject}</h1>
-            <span className="text-sm bg-gray-200 rounded-md px-2 mt-1">
-              {(selectedEmail?.from === user?.email && "sent") || (selectedEmail?.to === user?.email && "inbox")}
-            </span>
+            <span className="text-sm bg-gray-200 rounded-md px-2 mt-1">{(selectedEmail?.from === user?.email && "sent") || (selectedEmail?.to === user?.email && "inbox")}</span>
           </div>
           <div className="flex-none text-gray-500 my-5 text-sm">
             <p>{selectedEmail?.createdAt}</p>

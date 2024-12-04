@@ -11,6 +11,7 @@ import { db } from "../../firebase";
 import { setSelectedEmailsArray } from "../../redux/appSlice";
 import { TbTrashX } from "react-icons/tb";
 import { GoDotFill } from "react-icons/go";
+import { Tooltip } from "react-tooltip";
 
 const Message = ({ email, index }) => {
   const selectedMailPath = useSelector((state) => state.navSlice.selectedMailPath);
@@ -93,7 +94,9 @@ const Message = ({ email, index }) => {
           {email?.starred ? <RiStarSFill className="w-5 h-5 text-teal-400" /> : <RiStarLine className="w-5 h-5 hover:text-gray-500" />}
         </div>
         <div className="flex-none text-gray-300 px-1 py-2" onClick={handleSelectedTrashedEmail}>
-          {email?.trashed ? <TbTrashX className="w-5 h-5 text-rose-600 hover:text-teal-400" /> : <TbTrashX className="w-5 h-5 hover:text-rose-600" />}
+          {email?.trashed ? <TbTrashX id="selected-mail-trash-2" className="w-5 h-5 text-rose-600 hover:text-teal-400" /> : <TbTrashX id="selected-mail-trash-1" className="w-5 h-5 hover:text-rose-600" />}
+          <Tooltip anchorSelect="#selected-mail-trash-1" content="Move to Trash" place="top" className="backdrop-blur-3xl" border="1px solid red" float={true} opacity={0.5} />
+          <Tooltip anchorSelect="#selected-mail-trash-2" content="Remove from Trash" place="top" className="backdrop-blur-3xl" border="1px solid red" float={true} opacity={0.5} />
         </div>
         <div className="flex-none">
           <GoDotFill className={`w-5 h-5 ${!email?.read ? "text-blue-600" : "text-gray-300"}`} />
