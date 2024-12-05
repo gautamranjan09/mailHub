@@ -158,7 +158,7 @@ const Navbar = () => {
           </div>
           <div className="flex items-center gap-2 cursor-pointer">
             <img className="w-7" src="https://mailmeteor.com/logos/assets/PNG/Gmail_Logo_512px.png" alt="gmail-logo" />
-            <h1 className="text-2xl text-gray-500 font-normal">Gmail</h1>
+            <h1 className="text-2xl text-gray-500 font-normal">MailHub</h1>
           </div>
         </div>
       </div>
