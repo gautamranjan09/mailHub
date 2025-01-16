@@ -25,13 +25,13 @@ const Login = () => {
       let loggedInUser = useCurrentUser(user);
       dispatch(setUser(loggedInUser));
 
-      const userDataUpdate = async() => {
+      const userDataUpdate = async () => {
         const docsnap = await getDoc(doc(db, user.email, user.email));
         const docdata = docsnap.exists() ? docsnap.data() : {};
         loggedInUser = useCurrentUser(user, docdata);
- 
+
         await setDoc(doc(db, loggedInUser.email, loggedInUser.email), { ...loggedInUser });
-      }
+      };
       userDataUpdate();
 
       toast.success("Welcome back to Mail hub! You are already logged in.");
@@ -85,6 +85,25 @@ const Login = () => {
     }
   };
 
+  const signinWithGuest = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, "gautamranjan96@gmail.com", "123456");
+      const docsnap = await getDoc(doc(db, userCredential.user.email, userCredential.user.email));
+      const docdata = docsnap.exists() ? docsnap.data() : {};
+      const loggedInUser = useCurrentUser(userCredential.user, docdata);
+      dispatch(setUser(loggedInUser));
+      createDoc(loggedInUser, userCredential.user.email);
+      toast.success("Welcome to Mailhub!");
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const createDoc = async (loggedInUser, email) => {
     try {
       await setDoc(doc(db, email, email), { ...loggedInUser });
@@ -99,7 +118,7 @@ const Login = () => {
       <div className="w-full max-w-md p-8 rounded-xl relative z-10 mx-4 backdrop-blur-3xl bg-white/10 border border-white/70 shadow-xl animate-fadeIn">
         <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-transparent to-white/10 rounded-xl -z-10" />
 
-        <div className="text-center mb-8">
+        <div className="text-center mb-4">
           <h2 className="text-3xl font-bold text-slate-700">Sign in to Mail Hub</h2>
           <p className="text-slate-400 mt-2">Welcome back! Please enter your details</p>
         </div>
@@ -186,10 +205,31 @@ const Login = () => {
             </button>
           </div>
         </form>
-        <div className="text-center mt-2">
+        <div className="text-center mt-2 mb-4">
           <span className="text-gray-500 text-sm">or Don't Have An Account?</span>
           <button disabled={isLoading} onClick={() => navigate("/signup")} type="button" className="ml-2 text-sm text-teal-400 hover:text-teal-500 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
             Sign up
+          </button>
+        </div>
+        <div className="relative flex items-center justify-center mb-3">
+          <div className="border-t border-gray-300 w-full" />
+          <div className="bg-white px-4 text-sm text-gray-500">or</div>
+          <div className="border-t border-gray-300 w-full" />
+        </div>
+        <div className="animate-slideIn">
+          <button
+            onClick={signinWithGuest}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-teal-500 bg-white hover:text-white hover:bg-gradient-to-r hover:from-rose-300 hover:to-teal-300 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-colors duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <>
+                <BiLoader className="w-5 h-5 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              <>Continue as Guest</>
+            )}
           </button>
         </div>
       </div>
